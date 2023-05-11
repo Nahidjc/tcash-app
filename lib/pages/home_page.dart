@@ -31,12 +31,12 @@ class GridItem extends StatelessWidget {
         children: [
           Icon(
             icon,
-            size: 25,
+            size: 30,
           ),
           const SizedBox(height: 10),
           Text(
             title,
-            style: const TextStyle(fontSize: 15),
+            style: const TextStyle(fontSize: 10),
           ),
         ],
       ),
@@ -86,11 +86,26 @@ class _HomePageState extends State<HomePage> {
                       Container(
                         padding: const EdgeInsets.all(20),
                         alignment: Alignment.centerLeft,
-                        child: const Text(
-                          '\৳100.00',
+                        child: Row(children: const [
+                          Expanded(
+                              child: Text(
+                            '৳ 100.00',
                           style: TextStyle(
                               fontSize: 30, fontWeight: FontWeight.bold),
-                        ),
+                          )),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: CircleAvatar(
+                              backgroundColor: Colors.blue,
+                              radius: 20,
+                              child: Icon(
+                                Icons.add,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                            ),
+                          )
+                        ]),
                       ),
                     ],
                   ),
@@ -108,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                         icon: Icons.send),
                     GridItem(
                         key: UniqueKey(),
-                        title: 'Cash In',
+                        title: 'Add Money',
                         icon: Icons.attach_money),
                     GridItem(
                         key: UniqueKey(),
