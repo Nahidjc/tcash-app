@@ -27,20 +27,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
    return Scaffold(
        appBar: AppBar(
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.notifications,  color: Colors.white,),
-            onPressed: () {
-              // Handle notification icon tap
-            },
-          ),
-           IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {
-              // Handle menu icon tap
-            },
-          ),
-        ],
+        backgroundColor: Colors.white,
+        elevation: 0, // set elevation to 0 to remove shadow
+        iconTheme: const IconThemeData(
+          color: Colors.black,
+        ),
+
         title: Row(
           children: const <Widget>[
             CircleAvatar(
@@ -48,9 +40,30 @@ class MyApp extends StatelessWidget {
                   'https://avatars.githubusercontent.com/u/113003788'),
             ),
             SizedBox(width: 8),
-            Text("Nahid Hasan"),
+            Text(
+              "Nahid Hasan",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15),
+            ),
           ],
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.notifications),
+            onPressed: () {
+              // Handle notification icon tap
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              // Handle menu icon tap
+            },
+          ),
+          // IconButton(icon: const Icon(Icons.search), onPressed: () {})
+        ],
       ),
       body: const Center(
         child: HomePage(),
