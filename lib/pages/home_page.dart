@@ -8,7 +8,6 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-
 class GridItem extends StatelessWidget {
   // const GridItem({super.key});
   final String title;
@@ -52,7 +51,7 @@ class _HomePageState extends State<HomePage> {
     context.read<AuthProvider>().token;
   }
 
- @override
+  @override
   Widget build(BuildContext context) {
     return Container(
         padding: const EdgeInsets.all(16.0),
@@ -65,7 +64,6 @@ class _HomePageState extends State<HomePage> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
                     color: Colors.white,
-                  
                   ),
                   margin: const EdgeInsets.only(bottom: 20),
                   child: Column(
@@ -90,8 +88,8 @@ class _HomePageState extends State<HomePage> {
                           Expanded(
                               child: Text(
                             '৳ 100.00',
-                          style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 30, fontWeight: FontWeight.bold),
                           )),
                           Align(
                             alignment: Alignment.centerRight,
@@ -135,6 +133,54 @@ class _HomePageState extends State<HomePage> {
                         icon: Icons.payment),
                   ],
                 ),
+                Container(
+                    margin: const EdgeInsets.only(top: 20),
+                    padding: const EdgeInsets.all(20),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1),
+                          spreadRadius: 1,
+                          blurRadius: 2,
+                          offset:
+                              const Offset(0, 1), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween, 
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text(
+                              'Financial Management',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Your expense today ৳ 24',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: const [
+                            Icon(Icons.arrow_forward_ios),
+                          ],
+                        )
+                      ],
+                    ))
               ],
             ),
           ),

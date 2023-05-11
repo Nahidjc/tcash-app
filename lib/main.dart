@@ -25,8 +25,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
+    return SafeArea(
+        child: Scaffold(
        appBar: AppBar(
+        toolbarHeight: 70, // set the height of the AppBar
         backgroundColor: Colors.white,
         elevation: 0, // set elevation to 0 to remove shadow
         iconTheme: const IconThemeData(
@@ -68,6 +70,6 @@ class MyApp extends StatelessWidget {
       body: const Center(
         child: HomePage(),
       ),
-    );
+    ));
   }
 }
