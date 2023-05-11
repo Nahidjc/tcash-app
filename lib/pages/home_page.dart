@@ -151,6 +151,7 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween, 
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,6 +174,11 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         ),
+                        Column(
+                          children: const [
+                            Icon(Icons.arrow_forward_ios),
+                          ],
+                        )
                       ],
                     ))
               ],
