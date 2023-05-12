@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rnd_flutter_app/pages/transaction_history.dart';
 import 'package:rnd_flutter_app/provider/login_provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -180,10 +181,49 @@ class _HomePageState extends State<HomePage> {
                           ],
                         )
                       ],
-                    ))
-              ],
-            ),
+                  )),
+              // Container(
+              //   margin: const EdgeInsets.only(top: 10),
+              //   padding: const EdgeInsets.all(20),
+              //   width: double.infinity,
+              //   decoration: BoxDecoration(
+              //     color: Colors.white,
+              //     borderRadius: BorderRadius.circular(10),
+              //     boxShadow: [
+              //       BoxShadow(
+              //         color: Colors.grey.withOpacity(0.1),
+              //         spreadRadius: 1,
+              //         blurRadius: 2,
+              //         offset: const Offset(0, 1), // changes position of shadow
+              //       ),
+              //     ],
+              //   ),
+              //   child: const TransactionHistory(),
+              // )
+              Container(
+                height: 200.0,
+                margin: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 1,
+                      blurRadius: 2,
+                      offset: const Offset(0, 1), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: const Scrollbar(
+                  child: TransactionHistory(),
+                ),
+              )
+            ],
           ),
+        ) 
         ));
   }
 }
