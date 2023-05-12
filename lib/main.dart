@@ -27,14 +27,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-       appBar: AppBar(
+      appBar: AppBar(
         toolbarHeight: 70, // set the height of the AppBar
         backgroundColor: Colors.white,
         elevation: 0, // set elevation to 0 to remove shadow
         iconTheme: const IconThemeData(
           color: Colors.black,
         ),
-
         title: Row(
           children: const <Widget>[
             CircleAvatar(
@@ -69,6 +68,24 @@ class MyApp extends StatelessWidget {
       ),
       body: const Center(
         child: HomePage(),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        showSelectedLabels: false, // <-- HERE
+        showUnselectedLabels: false,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.qr_code),
+            label: 'QR Code',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
       ),
     ));
   }

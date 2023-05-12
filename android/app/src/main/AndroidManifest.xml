@@ -2,9 +2,9 @@
     package="com.example.rnd_flutter_app">
     <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="rnd_flutter_app"
+        android:label="Tcash"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/tcash">
         <activity
             android:name=".MainActivity"
             android:exported="true"
