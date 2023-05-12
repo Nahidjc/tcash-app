@@ -54,10 +54,48 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.all(10.0),
-        child: Scaffold(
-          body: SingleChildScrollView(
+    return Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 70, // set the height of the AppBar
+          backgroundColor: Colors.white,
+          elevation: 0, // set elevation to 0 to remove shadow
+          iconTheme: const IconThemeData(
+            color: Colors.black,
+          ),
+          title: Row(
+            children: const <Widget>[
+              CircleAvatar(
+                backgroundImage: NetworkImage(
+                    'https://avatars.githubusercontent.com/u/113003788'),
+              ),
+              SizedBox(width: 8),
+              Text(
+                "Nahid Hasan",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.notifications),
+              onPressed: () {
+                // Handle notification icon tap
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                // Handle menu icon tap
+              },
+            ),
+            // IconButton(icon: const Icon(Icons.search), onPressed: () {})
+          ],
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(10.0),
             scrollDirection: Axis.vertical,
             child: Column(
               children: [
@@ -213,7 +251,25 @@ class _HomePageState extends State<HomePage> {
               )
             ],
           ),
-        ) 
-        ));
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          showSelectedLabels: false, // <-- HERE
+          showUnselectedLabels: false,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.qr_code),
+              label: 'QR Code',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+        )
+    );
   }
 }
