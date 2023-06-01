@@ -6,12 +6,10 @@ import 'package:rnd_flutter_app/routes/app_routes.dart';
 
 void main() {
   runApp(
-    MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => TodoProvider()),
-          ChangeNotifierProvider(create: (_) => AuthProvider())
-        ],
-        child: const MyApp()
+    MultiProvider(providers: [
+      ChangeNotifierProvider(create: (_) => TodoProvider()),
+      ChangeNotifierProvider(create: (_) => AuthProvider())
+    ], child: const MyApp()
         // MaterialApp(
         //   home: const Scaffold(
         //       backgroundColor: Colors.white, body: Center(child: MyApp())),
@@ -35,7 +33,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       routes: AppRoutes.routes,
-      initialRoute: AppRoutes.login,
+      initialRoute: AppRoutes.register,
     );
   }
 }

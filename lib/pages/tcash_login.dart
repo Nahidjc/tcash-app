@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:rnd_flutter_app/routes/app_routes.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
+
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _accountNumberController =
       TextEditingController();
@@ -24,7 +26,12 @@ class _LoginPageState extends State<LoginPage> {
       String pin = _pinController.text;
       _accountNumberController.clear();
       _pinController.clear();
+      Navigator.pushReplacementNamed(context, AppRoutes.home);
     }
+  }
+
+  void _goToRegisterPage() {
+    Navigator.pushReplacementNamed(context, AppRoutes.register);
   }
 
   @override
@@ -55,8 +62,13 @@ class _LoginPageState extends State<LoginPage> {
                   controller: _accountNumberController,
                   keyboardType: TextInputType.number,
                   maxLength: 11,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Account Number',
+                    border: OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.circular(8), // Apply corner radius
+                    ),
+                    prefixIcon: const Icon(Icons.phone_rounded, size: 24),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -73,44 +85,55 @@ class _LoginPageState extends State<LoginPage> {
                   controller: _pinController,
                   keyboardType: TextInputType.number,
                   obscureText: true,
-                  maxLength: 4,
+                  maxLength: 6,
                   decoration: InputDecoration(
-                    labelText: 'Tcash PIN',
-                    suffixIcon: GestureDetector(
-                      onTap: () {
-                        // Handle forget PIN logic here
-                      },
-                      child: const Text(
-                        'Forget PIN?',
-                        style: TextStyle(
-                          color: Colors.blue,
-                        ),
+                      labelText: 'Tcash PIN',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                    ),
-                  ),
-                  onChanged: (value) {
-                    if (value.length > 4) {
-                      _pinController.text = value.substring(0, 4);
-                      _pinController.selection = TextSelection.fromPosition(
-                        TextPosition(offset: _pinController.text.length),
-                      );
+                      prefixIcon: const Icon(Icons.lock, size: 24)),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your Pin number';
                     }
+                    if (value.length != 6) {
+                      return 'Pin number must be exactly 6 digits';
+                    }
+                    return null;
                   },
                 ),
-                const SizedBox(height: 40.0),
+                const SizedBox(height: 20.0),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _submitForm,
-                    // color: Colors.white70,
                     child: const Text('Login'),
                   ),
                 ),
                 const SizedBox(height: 20.0),
-                const Text(
-                  "Don't have an account? Register here",
-                  style: TextStyle(
-                    color: Colors.grey,
+                GestureDetector(
+                  onTap: () {
+                    // Handle forget PIN logic here
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.only(right: 8.0),
+                    child: Text(
+                      'Forget PIN?',
+                      style: TextStyle(
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                GestureDetector(
+                  onTap: _goToRegisterPage,
+                  child: const Text(
+                    "Don't have an account? Register here",
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ],
