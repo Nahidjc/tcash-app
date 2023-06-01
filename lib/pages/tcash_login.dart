@@ -46,8 +46,10 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 40.0),
-                const FlutterLogo(
-                  size: 80.0,
+                Image.asset(
+                  'assets/images/tcash.png',
+                  width: 100,
+                  fit: BoxFit.cover,
                 ),
                 const SizedBox(height: 20.0),
                 const Text(
