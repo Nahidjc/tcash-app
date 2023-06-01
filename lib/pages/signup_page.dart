@@ -70,19 +70,17 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sign Up'),
-      ),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           child: Form(
             key: _formKey,
             child: Column(
               children: [
+                const SizedBox(height: 20.0),
                 Image.asset(
                   'assets/images/tcash.png',
-                  width: 60,
+                  width: 80,
                   fit: BoxFit.cover,
                 ),
                 const SizedBox(height: 10.0),
@@ -130,7 +128,7 @@ class _SignupPageState extends State<SignupPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 10.0),
+                const SizedBox(height: 20.0),
                 TextFormField(
                   controller: _passwordController,
                   obscureText: _obscured,
