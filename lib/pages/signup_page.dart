@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
+import 'package:rnd_flutter_app/widgets/custom_button.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -79,8 +80,10 @@ class _SignupPageState extends State<SignupPage> {
             key: _formKey,
             child: Column(
               children: [
-                FlutterLogo(
-                  size: 40.0,
+                Image.asset(
+                  'assets/images/tcash.png',
+                  width: 60,
+                  fit: BoxFit.cover,
                 ),
                 const SizedBox(height: 10.0),
                 TextFormField(
@@ -233,21 +236,12 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 const SizedBox(height: 10.0),
                 SizedBox(
-                  width: double.infinity,
-                  height: 50.0,
-                  child: ElevatedButton(
-                    onPressed: _submitForm,
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    child: const Text(
-                      'Create Account',
-                      style: TextStyle(fontSize: 18.0),
-                    ),
-                  ),
-                ),
+                    width: double.infinity,
+                    height: 50.0,
+                    child: CustomButton(
+                      text: 'Create Account',
+                      onPressed: _submitForm,
+                    )),
                 const SizedBox(height: 20.0),
                 GestureDetector(
                   onTap: _goToLoginPage,
