@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
+import 'package:rnd_flutter_app/widgets/custom_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -107,9 +108,9 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 20.0),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
+                  child: CustomButton(
+                    text: 'Login',
                     onPressed: _submitForm,
-                    child: const Text('Login'),
                   ),
                 ),
                 const SizedBox(height: 20.0),

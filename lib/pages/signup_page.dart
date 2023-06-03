@@ -87,7 +87,7 @@ class _SignupPageState extends State<SignupPage> {
                 TextFormField(
                   controller: _mobileNoController,
                   keyboardType: TextInputType.phone,
-                  maxLength: 10,
+                  maxLength: 11,
                   decoration: InputDecoration(
                     labelText: 'Mobile Number',
                     border: OutlineInputBorder(
@@ -131,6 +131,7 @@ class _SignupPageState extends State<SignupPage> {
                 const SizedBox(height: 20.0),
                 TextFormField(
                   controller: _passwordController,
+                  keyboardType: TextInputType.number,
                   obscureText: _obscured,
                   maxLength: 6,
                   decoration: InputDecoration(
@@ -167,6 +168,7 @@ class _SignupPageState extends State<SignupPage> {
                 TextFormField(
                   controller: _confirmPasswordController,
                   obscureText: _obscured,
+                  keyboardType: TextInputType.number,
                   focusNode: textFieldFocusNode,
                   maxLength: 6,
                   decoration: InputDecoration(
