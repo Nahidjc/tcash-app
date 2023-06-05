@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rnd_flutter_app/pages/qr_code_widget.dart';
 import 'package:rnd_flutter_app/pages/transaction_history.dart';
 import 'package:rnd_flutter_app/provider/login_provider.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
@@ -64,6 +65,8 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,8 +77,8 @@ class _HomePageState extends State<HomePage> {
           iconTheme: const IconThemeData(
             color: Colors.black,
           ),
-          title: Row(
-            children: const <Widget>[
+          title: const Row(
+            children: <Widget>[
               CircleAvatar(
                 backgroundImage: NetworkImage(
                     'https://avatars.githubusercontent.com/u/113003788'),
@@ -143,7 +146,7 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       padding: const EdgeInsets.all(20),
                       alignment: Alignment.centerLeft,
-                      child: Row(children: const [
+                      child: const Row(children: [
                         Expanded(
                             child: Text(
                           '৳ 100.00',
@@ -216,12 +219,12 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
                             'Financial Management',
                             style: TextStyle(
@@ -241,7 +244,7 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                       Column(
-                        children: const [
+                        children: [
                           Icon(Icons.arrow_forward_ios),
                         ],
                       )
@@ -274,6 +277,18 @@ class _HomePageState extends State<HomePage> {
         bottomNavigationBar: BottomNavigationBar(
           showSelectedLabels: false, // <-- HERE
           showUnselectedLabels: false,
+          currentIndex: _currentIndex, // Set the current index
+          onTap: (int index) {
+            setState(() {
+              _currentIndex = index; // Update the current index
+              if (index == 1) {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const QRViewExample(),
+                ));
+                print("===========qrcodeScanner");
+              }
+            });
+          },
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
