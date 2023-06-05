@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rnd_flutter_app/pages/transaction_history.dart';
 import 'package:rnd_flutter_app/provider/login_provider.dart';
+import 'package:rnd_flutter_app/routes/app_routes.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,35 +14,38 @@ class GridItem extends StatelessWidget {
   // const GridItem({super.key});
   final String title;
   final IconData icon;
+  final Function()? onTap;
   @override
   // ignore: overridden_fields
   final Key? key;
-  const GridItem({this.key, required this.title, required this.icon})
+  const GridItem(
+      {this.key, required this.title, required this.icon, required this.onTap})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return GestureDetector(
+        onTap: onTap,
         child: Container(
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            size: 30,
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(10),
           ),
-          const SizedBox(height: 10),
-          Text(
-            title,
-            style: const TextStyle(fontSize: 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: 30,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                title,
+                style: const TextStyle(fontSize: 10),
+              ),
+            ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 }
 
@@ -171,17 +175,28 @@ class _HomePageState extends State<HomePage> {
                 crossAxisSpacing: 5,
                 children: [
                   GridItem(
-                      key: UniqueKey(), title: 'Send Money', icon: Icons.send),
+                      key: UniqueKey(),
+                      title: 'Send Money',
+                      onTap: () {
+                        Navigator.pushReplacementNamed(
+                            context, AppRoutes.sendmoney);
+                      },
+                      icon: Icons.send),
                   GridItem(
                       key: UniqueKey(),
                       title: 'Add Money',
+                      onTap: () {},
                       icon: Icons.attach_money),
                   GridItem(
                       key: UniqueKey(),
                       title: 'Cash Out',
+                      onTap: () {},
                       icon: Icons.monetization_on),
                   GridItem(
-                      key: UniqueKey(), title: 'Payment', icon: Icons.payment),
+                      key: UniqueKey(),
+                      title: 'Payment',
+                      onTap: () {},
+                      icon: Icons.payment),
                 ],
               ),
               Container(
@@ -251,8 +266,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: Scrollbar(
                     controller: _scrollController,
-                    child: const TransactionHistory()
-                ),
+                    child: const TransactionHistory()),
               )
             ],
           ),
