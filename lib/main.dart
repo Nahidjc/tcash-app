@@ -10,26 +10,19 @@ void main() {
       ChangeNotifierProvider(create: (_) => TodoProvider()),
       ChangeNotifierProvider(create: (_) => AuthProvider())
     ], child: const MyApp()
-        // MaterialApp(
-        //   home: const Scaffold(
-        //       backgroundColor: Colors.white, body: Center(child: MyApp())),
-        // )
         ),
   );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "tCash App",
       theme: ThemeData(
-        primarySwatch: Colors.blue, // Set primary color
-        fontFamily: 'Roboto', // Set default font family
-        // Define other properties...
+        primarySwatch: Colors.blue,
+        fontFamily: 'Roboto', 
       ),
       debugShowCheckedModeBanner: false,
       routes: AppRoutes.routes,
