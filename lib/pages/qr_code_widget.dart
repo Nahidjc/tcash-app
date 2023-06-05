@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:rnd_flutter_app/pages/payment_page.dart';
 
 class QRViewExample extends StatefulWidget {
   const QRViewExample({Key? key}) : super(key: key);
@@ -83,5 +84,12 @@ class _QRScannerPageState extends State<QRViewExample> {
     }
   }
 
-  Future<void> launchPaymentPage(String data) async {}
+  Future<void> launchPaymentPage(String data) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PaymentPage(marchantAccount: data),
+      ),
+    );
+  }
 }

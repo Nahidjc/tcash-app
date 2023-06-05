@@ -198,7 +198,10 @@ class _HomePageState extends State<HomePage> {
                   GridItem(
                       key: UniqueKey(),
                       title: 'Payment',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.pushReplacementNamed(
+                            context, AppRoutes.payment);
+                      },
                       icon: Icons.payment),
                 ],
               ),
@@ -285,7 +288,6 @@ class _HomePageState extends State<HomePage> {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const QRViewExample(),
                 ));
-                print("===========qrcodeScanner");
               }
             });
           },

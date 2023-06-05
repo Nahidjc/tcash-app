@@ -29,21 +29,14 @@ class _SignupPageState extends State<SignupPage> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      // Valid form, perform sign-up process
       String mobileNo = _mobileNoController.text;
       String email = _emailController.text;
       String password = _passwordController.text;
 
-      // Perform sign-up logic here
-      // You can perform API calls or any other sign-up process
-
-      // Clear the text fields after sign-up
       _mobileNoController.clear();
       _emailController.clear();
       _passwordController.clear();
       _confirmPasswordController.clear();
-
-      // Reset the user type
       setState(() {
         _userType = 'Merchant';
       });
