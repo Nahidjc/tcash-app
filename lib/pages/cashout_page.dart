@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:rnd_flutter_app/pages/components/amount_confirm.dart';
 import 'package:rnd_flutter_app/pages/qr_code_widget.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
 
@@ -35,7 +37,7 @@ class _CashoutPageState extends State<CashoutPage> {
           },
         ),
         title: const Text(
-          'Marchant Payment',
+          'Cash Out',
           textAlign: TextAlign.center,
         ),
         centerTitle: true,
@@ -60,65 +62,37 @@ class _CashoutPageState extends State<CashoutPage> {
               },
             ),
             // const SizedBox(height: 16),
-             Column(
-              children: [
-                const Text(
+            Column(children: [
+              const Text(
                 'or',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               const Text(
                 'Scan',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               Container(
                 width: 70,
-                child:
-              ElevatedButton(
-                child: const Icon(Icons.qr_code),
-                onPressed: (){
-                   Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const QRViewExample(),
-                ));
-                },
-              ),
-              )
-              ]
-            ),
-
-            TextField(
-              keyboardType: TextInputType.number,
-              maxLength: 5,
-              decoration: const InputDecoration(
-                labelText: 'Enter amount',
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  amount = value;
-                });
-              },
-            ),
-            const SizedBox(height: 16),
-            Center(
-              child: Text(
-                'Available Balance: \$${availableBalance.toStringAsFixed(2)}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
+                child: ElevatedButton(
+                  child: const Icon(Icons.qr_code),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const QRViewExample(),
+                    ));
+                  },
                 ),
-              ),
-            ),
+              )
+            ]),
+
             const SizedBox(height: 16),
             Container(
               width: MediaQuery.of(context).size.width * 0.6,
               child: ElevatedButton(
                 onPressed: () {
-                  // Perform payment logic here
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) =>
+                        AmountConfirm(accountNo: _marchantNoController.text),
+                  ));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
