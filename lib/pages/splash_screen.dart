@@ -12,18 +12,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-<<<<<<< Updated upstream
     Future.delayed(const Duration(seconds: 3)).then(
-<<<<<<< HEAD
-        (value) => {Navigator.pushReplacementNamed(context, AppRoutes.login)});
-=======
-    Future.delayed(const Duration(seconds: 3)).then((value) =>
-        {Navigator.pushReplacementNamed(context, AppRoutes.sendmoney)});
->>>>>>> Stashed changes
-=======
-        (value) =>
-        {Navigator.pushReplacementNamed(context, AppRoutes.home)});
->>>>>>> e003cb3f433c17d6fb7cd0552514e177fe57689b
+        (value) => {Navigator.pushReplacementNamed(context, AppRoutes.home)});
   }
 
   @override
