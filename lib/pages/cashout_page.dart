@@ -27,6 +27,13 @@ class _CashoutPageState extends State<CashoutPage> {
 
   @override
   Widget build(BuildContext context) {
+  bool isButtonDisabled = _marchantNoController.text.length != 11;
+  bool showError = _marchantNoController.text.isNotEmpty && isButtonDisabled;
+
+  Color borderSideColor = isButtonDisabled
+      ? Colors.red
+      : Color.fromARGB(255, 2, 183, 255);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 3, 128, 121),
@@ -47,20 +54,30 @@ class _CashoutPageState extends State<CashoutPage> {
         child: Column(
           children: [
             const SizedBox(height: 8),
-            TextField(
-              maxLength: 11,
-              controller: _marchantNoController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Enter Agent Account Number',
-                border: OutlineInputBorder(),
+           TextField(
+            maxLength: 11,
+            controller: _marchantNoController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: 'Enter Agent Account Number',
+              border: OutlineInputBorder(),
+              errorText: showError ? 'Account number must be 11 characters' : null,
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
               ),
-              onChanged: (value) {
-                setState(() {
-                  accountNumber = value;
-                });
-              },
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: borderSideColor),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: borderSideColor),
+              ),
             ),
+            onChanged: (value) {
+              setState(() {
+                accountNumber = value;
+              });
+            },
+          ),
             // const SizedBox(height: 16),
             Column(children: [
               const Text(
@@ -88,19 +105,20 @@ class _CashoutPageState extends State<CashoutPage> {
             Container(
               width: MediaQuery.of(context).size.width * 0.6,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>
-                        AmountConfirm(accountNo: _marchantNoController.text),
-                  ));
-                },
+                onPressed: isButtonDisabled
+                  ? null // Disable the button if the condition is not met
+                  : () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            AmountConfirm(accountNo: _marchantNoController.text),
+                      ));
+                    },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
-                    side: const BorderSide(
-                        color: Color.fromARGB(255, 2, 183, 255)),
+                    side: BorderSide(color: borderSideColor),
                   ),
                 ),
                 child: const Text('Next'),
