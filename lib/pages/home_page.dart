@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rnd_flutter_app/pages/qr_code_widget.dart';
 import 'package:rnd_flutter_app/pages/transaction_history.dart';
+import 'package:rnd_flutter_app/pages/user_profile.dart';
 import 'package:rnd_flutter_app/provider/login_provider.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
 
@@ -266,7 +267,7 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.grey.withOpacity(0.1),
                       spreadRadius: 1,
                       blurRadius: 2,
-                      offset: const Offset(0, 1), // changes position of shadow
+                      offset: const Offset(0, 1), 
                     ),
                   ],
                 ),
@@ -278,15 +279,19 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(
-          showSelectedLabels: false, // <-- HERE
+          showSelectedLabels: false, 
           showUnselectedLabels: false,
-          currentIndex: _currentIndex, // Set the current index
+          currentIndex: _currentIndex, 
           onTap: (int index) {
             setState(() {
-              _currentIndex = index; // Update the current index
+              _currentIndex = index; 
               if (index == 1) {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const QRViewExample(),
+                ));
+              } else if (index == 2) {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const UserProfilePage(),
                 ));
               }
             });
