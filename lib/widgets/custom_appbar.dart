@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+<<<<<<< HEAD
   final double appBarHeight = 50.0;
+=======
+  final double appBarHeight = 46.0;
+>>>>>>> e003cb3f433c17d6fb7cd0552514e177fe57689b
   final Widget content;
 
   const CustomAppBar({required this.content});
