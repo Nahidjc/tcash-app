@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
+import 'package:rnd_flutter_app/widgets/custom_appbar.dart';
 
 class PaymentPage extends StatefulWidget {
   final String? marchantAccount;
@@ -25,20 +26,15 @@ class _PaymentPageState extends State<PaymentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 3, 128, 121),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, AppRoutes.home);
-          },
+      appBar: const CustomAppBar(
+          content: Text(
+        "Marchant Payment",
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
         ),
-        title: const Text(
-          'Marchant Payment',
-          textAlign: TextAlign.center,
-        ),
-        centerTitle: true,
-      ),
+      )),
       body: Padding(
         padding: const EdgeInsets.all(26.0),
         child: Column(
