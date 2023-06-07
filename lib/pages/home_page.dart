@@ -6,6 +6,7 @@ import 'package:rnd_flutter_app/pages/transaction_history.dart';
 import 'package:rnd_flutter_app/pages/user_profile.dart';
 import 'package:rnd_flutter_app/provider/login_provider.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
+import 'package:rnd_flutter_app/widgets/home_appbar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -66,55 +67,23 @@ class _HomePageState extends State<HomePage> {
     _scrollController.dispose();
     super.dispose();
   }
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
 
   int _currentIndex = 0;
-final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
         endDrawer: SizedBox(
           width: MediaQuery.of(context).size.width * 0.5,
-          child: AppDrawer(),
+          child: const AppDrawer(),
         ),
-        appBar: AppBar(
-          toolbarHeight: 70, // set the height of the AppBar
-          backgroundColor: Colors.white,
-          elevation: 0, // set elevation to 0 to remove shadow
-          iconTheme: const IconThemeData(
-            color: Colors.black,
-          ),
-          title: const Row(
-            children: <Widget>[
-              CircleAvatar(
-                backgroundImage: NetworkImage(
-                    'https://avatars.githubusercontent.com/u/113003788'),
-              ),
-              SizedBox(width: 8),
-              Text(
-                "Nahid Hasan",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15),
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.notifications),
-              onPressed: () {
-                // Handle notification icon tap
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                _scaffoldKey.currentState!.openEndDrawer();
-              },
-            ),
-            // IconButton(icon: const Icon(Icons.search), onPressed: () {})
-          ],
+        appBar: MyAppBar(
+          name: "Nahid Hasan",
+          profilePicUrl: "https://avatars.githubusercontent.com/u/113003788",
+          initialBalance: 500,
+            openAppDrawer: openAppDrawer
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(10.0),
@@ -318,4 +287,8 @@ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
           ],
         ));
   }
+  void openAppDrawer() {
+    _scaffoldKey.currentState!.openEndDrawer();
+  }
+
 }
