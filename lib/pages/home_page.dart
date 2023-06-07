@@ -16,46 +16,59 @@ class HomePage extends StatefulWidget {
 }
 
 class GridItem extends StatelessWidget {
-  // const GridItem({super.key});
   final String title;
   final IconData icon;
   final Function()? onTap;
-  @override
-  // ignore: overridden_fields
-  final Key? key;
-  const GridItem(
-      {this.key, required this.title, required this.icon, required this.onTap})
-      : super(key: key);
+
+  const GridItem({
+    Key? key,
+    required this.title,
+    required this.icon,
+    required this.onTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: onTap,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                color: Colors.pink.shade300,
-                size: 30,
-              ),
-              const SizedBox(height: 10),
-              Text(
-                title,
-                style: TextStyle(
-                  color: Colors.pink.shade400,
-                  fontSize: 9.0,
-                  fontWeight: FontWeight.bold,
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final parentWidth = constraints.maxWidth;
+        final parentHeight = constraints.maxHeight;
+
+        final iconSize = parentHeight * 0.5;
+        final textSize = parentHeight * 0.10; 
+
+        return GestureDetector(
+          onTap: onTap,
+          child: Container(
+            width: parentWidth,
+            height: parentHeight,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  icon,
+                  color: Colors.pink.shade300,
+                  size: iconSize,
                 ),
-              ),
-            ],
+                const SizedBox(height: 10),
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: Colors.pink.shade400,
+                    fontSize: textSize,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ));
+        );
+      },
+    );
   }
 }
 
@@ -214,7 +227,7 @@ class _HomePageState extends State<HomePage> {
                         spreadRadius: 1,
                         blurRadius: 2,
                         offset:
-                            const Offset(0, 1), // changes position of shadow
+                            const Offset(0, 1), 
                       ),
                     ],
                   ),
