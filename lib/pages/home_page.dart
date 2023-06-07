@@ -94,9 +94,7 @@ class _HomePageState extends State<HomePage> {
         body: Padding(
             padding: const EdgeInsets.all(
                 10.0),
-            child: Column(
-              children: [
-                SingleChildScrollView(
+          child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Column(
                     children: [
@@ -254,7 +252,7 @@ class _HomePageState extends State<HomePage> {
                       )
                     ],
                   )),
-              Container(
+                Container(
                 height: 215,
                 margin: const EdgeInsets.only(top: 10),
                 padding: const EdgeInsets.only(left: 10, right: 10),
@@ -275,11 +273,11 @@ class _HomePageState extends State<HomePage> {
                     controller: _scrollController,
                     child: const TransactionHistory()),
               )
-            ],
+              
+              ],
+            ),
           ),
         ),
-              ],
-            )),
         bottomNavigationBar: BottomNavigationBar(
           showSelectedLabels: false,
           showUnselectedLabels: false,
