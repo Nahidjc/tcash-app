@@ -169,7 +169,10 @@ class _HomePageState extends State<HomePage> {
                   GridItem(
                       key: UniqueKey(),
                       title: 'Cash Out',
-                      onTap: () {},
+                      onTap: () {
+                         Navigator.pushReplacementNamed(
+                            context, AppRoutes.cashout);
+                      },
                       icon: Icons.monetization_on),
                   GridItem(
                       key: UniqueKey(),

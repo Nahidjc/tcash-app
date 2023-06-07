@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rnd_flutter_app/pages/cashout_page.dart';
+import 'package:rnd_flutter_app/pages/components/amount_confirm.dart';
 import 'package:rnd_flutter_app/pages/home_page.dart';
 import 'package:rnd_flutter_app/pages/payment_page.dart';
 import 'package:rnd_flutter_app/pages/send_money.dart';
@@ -14,6 +16,8 @@ class AppRoutes {
   static const String register = '/register_page';
   static const String sendmoney = '/send_money';
   static const String payment = '/payment_page';
+  static const String cashout = '/cashout_page';
+  static const String amountconfirm = '/amount_confirm';
   static const String profile = '/user_profile';
 
   static Map<String, WidgetBuilder> routes = {
@@ -23,6 +27,8 @@ class AppRoutes {
     register: (context) => const SignupPage(),
     sendmoney: (context) => const SendMoneyPage(),
     payment: (context) => const PaymentPage(),
+    cashout: (context) => const CashoutPage(),
+    amountconfirm: (context) => const AmountConfirm(),
     profile: (context) => const UserProfilePage()
   };
 }
