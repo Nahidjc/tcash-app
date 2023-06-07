@@ -1,90 +1,85 @@
 import 'package:flutter/material.dart';
 
 class AppDrawer extends StatelessWidget {
-  const AppDrawer({super.key});
+  const AppDrawer({Key? key});
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          Container(
-              height: 150,
-              child: const DrawerHeader(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.blue,
-                  Colors.green,
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+      child: SafeArea(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.width * 0.3,
+              child: DrawerHeader(
+                decoration: BoxDecoration(color: Colors.pink.shade400),
+                child: const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 25,
+                        backgroundImage: AssetImage('assets/images/avatar.png'),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        'Nahid Hasan',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 40,
-                    backgroundImage: AssetImage('assets/images/avatar.png'),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Nahid Hasan',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
+            ListTile(
+              leading: Icon(Icons.home, color: Colors.pink.shade400),
+              title: const Text('Home'),
+              onTap: () {
+                // Handle onTap
+              },
             ),
-              )),
-          ListTile(
-            leading: const Icon(Icons.home),
-            title: const Text('Home'),
-            onTap: () {
-              // TODO: Navigate to Home Page
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.bar_chart),
-            title: const Text('Statement'),
-            onTap: () {
-              // TODO: Navigate to Statement Page
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.assessment),
-            title: const Text('Limit'),
-            onTap: () {
-              // TODO: Navigate to Limit Page
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.person_add),
-            title: const Text('Refer'),
-            onTap: () {
-              // TODO: Navigate to Refer Page
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.support),
-            title: const Text('Support'),
-            onTap: () {
-              // TODO: Navigate to Support Page
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text('Logout'),
-            onTap: () {
-              // TODO: Perform Logout
-            },
-          ),
-        ],
+            ListTile(
+              leading: Icon(Icons.bar_chart, color: Colors.pink.shade400),
+              title: const Text('Statement'),
+              onTap: () {
+                // Handle onTap
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.assessment, color: Colors.pink.shade400),
+              title: const Text('Limit'),
+              onTap: () {
+                // Handle onTap
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.person_add, color: Colors.pink.shade400),
+              title: const Text('Refer'),
+              onTap: () {
+                // Handle onTap
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.support, color: Colors.pink.shade400),
+              title: const Text('Support'),
+              onTap: () {
+                // Handle onTap
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.logout, color: Colors.pink.shade400),
+              title: const Text('Logout'),
+              onTap: () {
+                // Handle onTap
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
