@@ -93,10 +93,14 @@ class _HomePageState extends State<HomePage> {
         ),
         body: Padding(
             padding: const EdgeInsets.all(
-                15.0), // Adjust the padding value as needed
+                10.0),
             child: Column(
               children: [
-                Container(
+                SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    children: [
+                      Container(
                   child: GridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -198,11 +202,7 @@ class _HomePageState extends State<HomePage> {
     
                 ],
               ),
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Column(
-                    children: [
+                      ),
                       Container(
                   margin: const EdgeInsets.only(top: 15),
                   padding: const EdgeInsets.all(20),

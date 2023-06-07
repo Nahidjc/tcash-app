@@ -33,7 +33,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: const CustomAppBar(
-          content: Text('User Profile'),
+          content: Text(
+            'User Profile',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
         ),
         body: SingleChildScrollView(
           child: Container(
