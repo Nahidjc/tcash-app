@@ -64,7 +64,15 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(content: Text("Send Money")),
+      appBar: const CustomAppBar(
+          content: Text(
+        "Send Money",
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      )),
       body: Container(
         padding: const EdgeInsets.all(16.0),
         child: Form(

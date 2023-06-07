@@ -73,6 +73,8 @@ class _MyAppBarState extends State<MyAppBar>
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      automaticallyImplyLeading: false,
+      leading: null,
       toolbarHeight: 70.0,
       flexibleSpace: Container(
         decoration: BoxDecoration(
