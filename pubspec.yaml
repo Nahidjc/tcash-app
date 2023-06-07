@@ -21,6 +21,7 @@ dependencies:
   qr_code_scanner: ^1.0.1
   image_picker: ^0.8.4+4
   flutter_profile_picture: ^2.0.0
+  pinput: ^2.2.31
   carousel_slider: ^4.0.0
 
 
