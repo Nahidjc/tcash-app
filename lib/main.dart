@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "tCash App",
       theme: ThemeData(
-        primarySwatch: Colors.orange, fontFamily: 'Roboto'
+        primarySwatch: Colors.pink, fontFamily: 'Roboto'
       ),
       debugShowCheckedModeBanner: false,
       routes: AppRoutes.routes,

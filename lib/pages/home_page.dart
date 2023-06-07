@@ -93,10 +93,14 @@ class _HomePageState extends State<HomePage> {
         ),
         body: Padding(
             padding: const EdgeInsets.all(
-                15.0), // Adjust the padding value as needed
+                10.0),
             child: Column(
               children: [
-                Container(
+                SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    children: [
+                      Container(
                   child: GridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -198,11 +202,7 @@ class _HomePageState extends State<HomePage> {
     
                 ],
               ),
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Column(
-                    children: [
+                      ),
                       Container(
                   margin: const EdgeInsets.only(top: 15),
                   padding: const EdgeInsets.all(20),
@@ -220,33 +220,36 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  child: const Row(
+                          child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                                  const Text(
                             'Financial Management',
                             style: TextStyle(
-                              color: Colors.black,
+                                      color: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 20,
+                                      fontSize: 16,
                             ),
                           ),
-                          SizedBox(height: 8),
+                                  const SizedBox(height: 8),
                           Text(
                             'Your expense today ৳ 24',
                             style: TextStyle(
-                              color: Colors.black,
+                                      color: Colors.pink.shade400,
                               fontSize: 16,
                             ),
                           ),
                         ],
                       ),
-                      Column(
+                              const Column(
                         children: [
-                          Icon(Icons.arrow_forward_ios),
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    color: Colors.pink,
+                                  ),
                         ],
                       )
                     ],
