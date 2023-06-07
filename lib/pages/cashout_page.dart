@@ -15,8 +15,8 @@ class CashoutPage extends StatefulWidget {
 class _CashoutPageState extends State<CashoutPage> {
   final TextEditingController _marchantNoController = TextEditingController();
   String accountNumber = '';
-  String amount = '';
-  double availableBalance = 500.00;
+  // String amount = '';
+  // double availableBalance = 500.00;
   @override
   void initState() {
     super.initState();
@@ -36,7 +36,7 @@ class _CashoutPageState extends State<CashoutPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 3, 128, 121),
+        backgroundColor: Colors.pink.shade300,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
