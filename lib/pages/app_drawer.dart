@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rnd_flutter_app/routes/app_routes.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({Key? key});
@@ -75,7 +76,7 @@ class AppDrawer extends StatelessWidget {
               leading: Icon(Icons.logout, color: Colors.pink.shade400),
               title: const Text('Logout'),
               onTap: () {
-                // Handle onTap
+               Navigator.pushReplacementNamed(context, AppRoutes.login);
               },
             ),
           ],

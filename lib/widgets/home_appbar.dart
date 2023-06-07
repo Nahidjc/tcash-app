@@ -25,7 +25,6 @@ class _MyAppBarState extends State<MyAppBar>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Offset> _offsetAnimation;
-  // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   double _currentBalance = 0.0;
   bool _showBalance = false;
 
@@ -76,8 +75,13 @@ class _MyAppBarState extends State<MyAppBar>
       automaticallyImplyLeading: false,
       leading: null,
       toolbarHeight: 70.0,
+      backgroundColor: Colors.white,
+      elevation: 0,
       flexibleSpace: Container(
         decoration: BoxDecoration(
+          borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(10),
+              bottomRight: Radius.circular(10)),
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -85,7 +89,6 @@ class _MyAppBarState extends State<MyAppBar>
           ),
         ),
       ),
-      elevation: 0,
       iconTheme: const IconThemeData(
         color: Colors.white,
       ),

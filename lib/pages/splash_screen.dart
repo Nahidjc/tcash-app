@@ -13,15 +13,15 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3)).then(
-        (value) => {Navigator.pushReplacementNamed(context, AppRoutes.home)});
+        (value) => {Navigator.pushReplacementNamed(context, AppRoutes.login)});
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
         body: Center(
       child: SpinKitSquareCircle(
-        color: Colors.orange,
+        color: Colors.pink.shade400,
         size: 50.0,
       ),
     ));
