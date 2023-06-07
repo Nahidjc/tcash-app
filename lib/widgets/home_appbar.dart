@@ -4,16 +4,18 @@ class MyAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String name;
   final String profilePicUrl;
   final double initialBalance;
+  final VoidCallback openAppDrawer;
 
-  const MyAppBar({
-    Key? key,
-    required this.name,
-    required this.profilePicUrl,
-    required this.initialBalance,
-  }) : super(key: key);
+  const MyAppBar(
+      {Key? key,
+      required this.name,
+      required this.profilePicUrl,
+      required this.initialBalance,
+      required this.openAppDrawer})
+      : super(key: key);
 
   @override
-  _MyAppBarState createState() => _MyAppBarState();
+  State<MyAppBar> createState() => _MyAppBarState();
 
   @override
   Size get preferredSize => const Size.fromHeight(70.0);
@@ -23,7 +25,7 @@ class _MyAppBarState extends State<MyAppBar>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Offset> _offsetAnimation;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   double _currentBalance = 0.0;
   bool _showBalance = false;
 
@@ -73,11 +75,11 @@ class _MyAppBarState extends State<MyAppBar>
     return AppBar(
       toolbarHeight: 70.0,
       flexibleSpace: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.pink, Colors.pink],
+            colors: [Colors.pink, Colors.pink.shade300],
           ),
         ),
       ),
@@ -117,11 +119,11 @@ class _MyAppBarState extends State<MyAppBar>
                   ),
                   child: Row(
                     children: [
-                      const SizedBox(width: 4.0),
+                      const SizedBox(width: 10.0),
                       SlideTransition(
                         position: _offsetAnimation,
                         child: const Text(
-                          '\$',
+                          '৳',
                           style: TextStyle(
                             color: Colors.pink,
                             fontSize: 12.0,
@@ -156,7 +158,7 @@ class _MyAppBarState extends State<MyAppBar>
         IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () {
-            // Handle menu icon tap
+            widget.openAppDrawer();
           },
         ),
       ],

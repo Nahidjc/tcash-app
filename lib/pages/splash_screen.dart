@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return const Scaffold(
         body: Center(
       child: SpinKitSquareCircle(
-        color: Colors.blue,
+        color: Colors.orange,
         size: 50.0,
       ),
     ));
