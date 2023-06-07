@@ -30,7 +30,7 @@ class _CashoutPageState extends State<CashoutPage> {
   bool isButtonDisabled = _marchantNoController.text.length != 11;
   bool showError = _marchantNoController.text.isNotEmpty && isButtonDisabled;
 
-  Color borderSideColor = isButtonDisabled
+  Color borderSideColor = showError
       ? Colors.red
       : Color.fromARGB(255, 2, 183, 255);
 
@@ -117,7 +117,7 @@ class _CashoutPageState extends State<CashoutPage> {
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+                    borderRadius: BorderRadius.circular(20.0),
                     side: BorderSide(color: borderSideColor),
                   ),
                 ),
