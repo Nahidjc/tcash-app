@@ -220,33 +220,36 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  child: const Row(
+                          child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                                  const Text(
                             'Financial Management',
                             style: TextStyle(
-                              color: Colors.black,
+                                      color: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 20,
+                                      fontSize: 16,
                             ),
                           ),
-                          SizedBox(height: 8),
+                                  const SizedBox(height: 8),
                           Text(
                             'Your expense today ৳ 24',
                             style: TextStyle(
-                              color: Colors.black,
+                                      color: Colors.pink.shade400,
                               fontSize: 16,
                             ),
                           ),
                         ],
                       ),
-                      Column(
+                              const Column(
                         children: [
-                          Icon(Icons.arrow_forward_ios),
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    color: Colors.pink,
+                                  ),
                         ],
                       )
                     ],

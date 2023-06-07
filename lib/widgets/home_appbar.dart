@@ -25,7 +25,6 @@ class _MyAppBarState extends State<MyAppBar>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Offset> _offsetAnimation;
-  // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   double _currentBalance = 0.0;
   bool _showBalance = false;
 
