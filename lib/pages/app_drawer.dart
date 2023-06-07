@@ -8,7 +8,9 @@ class AppDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          const DrawerHeader(
+          Container(
+              height: 150,
+              child: const DrawerHeader(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
@@ -39,7 +41,7 @@ class AppDrawer extends StatelessWidget {
                 ],
               ),
             ),
-          ),
+              )),
           ListTile(
             leading: const Icon(Icons.home),
             title: const Text('Home'),
