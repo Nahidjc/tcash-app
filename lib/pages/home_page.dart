@@ -6,6 +6,7 @@ import 'package:rnd_flutter_app/pages/transaction_history.dart';
 import 'package:rnd_flutter_app/pages/user_profile.dart';
 import 'package:rnd_flutter_app/provider/login_provider.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
+import 'package:rnd_flutter_app/widgets/coming_soon.dart';
 import 'package:rnd_flutter_app/widgets/home_appbar.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,7 +33,7 @@ class GridItem extends StatelessWidget {
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.grey[200],
+            color: Colors.white,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
@@ -40,12 +41,17 @@ class GridItem extends StatelessWidget {
             children: [
               Icon(
                 icon,
+                color: Colors.pink.shade300,
                 size: 30,
               ),
               const SizedBox(height: 10),
               Text(
                 title,
-                style: const TextStyle(fontSize: 10),
+                style: TextStyle(
+                  color: Colors.pink.shade400,
+                  fontSize: 9.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
@@ -85,68 +91,13 @@ class _HomePageState extends State<HomePage> {
           initialBalance: 500,
             openAppDrawer: openAppDrawer
         ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(10.0),
-          scrollDirection: Axis.vertical,
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      spreadRadius: 1,
-                      blurRadius: 2,
-                      offset: const Offset(0, 1), // changes position of shadow
-                    ),
-                  ],
-                ),
-                margin: const EdgeInsets.only(bottom: 20),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(
-                          left: 20.0, top: 8.0, bottom: 8.0),
-                      alignment: Alignment.centerLeft,
-                      child: const Text(
-                        'Current Balance',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 59, 163, 243),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      alignment: Alignment.centerLeft,
-                      child: const Row(children: [
-                        Expanded(
-                            child: Text(
-                          '৳ 100.00',
-                          style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold),
-                        )),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: CircleAvatar(
-                            backgroundColor: Colors.blue,
-                            radius: 20,
-                            child: Icon(
-                              Icons.add,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                          ),
-                        )
-                      ]),
-                    ),
-                  ],
-                ),
-              ),
-              GridView.count(
+        body: Padding(
+            padding: const EdgeInsets.all(
+                15.0), // Adjust the padding value as needed
+            child: Column(
+              children: [
+                Container(
+                  child: GridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 crossAxisCount: 4,
@@ -164,7 +115,15 @@ class _HomePageState extends State<HomePage> {
                   GridItem(
                       key: UniqueKey(),
                       title: 'Add Money',
-                      onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ComingSoonPage(featureName: 'Add Money'),
+                              ),
+                            );
+                          },
                       icon: Icons.attach_money),
                   GridItem(
                       key: UniqueKey(),
@@ -182,9 +141,69 @@ class _HomePageState extends State<HomePage> {
                             context, AppRoutes.payment);
                       },
                       icon: Icons.payment),
+                      GridItem(
+                          key: UniqueKey(),
+                          title: 'Pay Bill',
+                          icon: Icons.payment,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ComingSoonPage(featureName: "Pay Bill"),
+                              ),
+                            );
+                          }),
+                      GridItem(
+                          key: UniqueKey(),
+                          title: 'Mobile Recharge',
+                          icon: Icons.phone_android,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ComingSoonPage(
+                                    featureName: "Mobile Recharge"),
+                              ),
+                            );
+                          }),
+                      GridItem(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ComingSoonPage(featureName: "Savings"),
+                            ),
+                          );
+                        },
+                        key: UniqueKey(),
+                        title: 'Savings',
+                        icon: Icons.account_balance_wallet,
+                      ),
+                      GridItem(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ComingSoonPage(featureName: "Loan"),
+                            ),
+                          );
+                        },
+                        key: UniqueKey(),
+                        title: 'Loan',
+                        icon: Icons.monetization_on,
+                      ),
+    
                 ],
               ),
-              Container(
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    children: [
+                      Container(
                   margin: const EdgeInsets.only(top: 15),
                   padding: const EdgeInsets.all(20),
                   width: double.infinity,
@@ -256,6 +275,8 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
+              ],
+            )),
         bottomNavigationBar: BottomNavigationBar(
           showSelectedLabels: false,
           showUnselectedLabels: false,
