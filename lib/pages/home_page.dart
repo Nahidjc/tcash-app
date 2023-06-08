@@ -34,8 +34,8 @@ class GridItem extends StatelessWidget {
         final parentWidth = constraints.maxWidth;
         final parentHeight = constraints.maxHeight;
 
-        final iconSize = parentHeight * 0.5;
-        final textSize = parentHeight * 0.10; 
+        final iconSize = parentHeight * 0.45;
+        final textSize = parentHeight * 0.12; 
 
         return GestureDetector(
           onTap: onTap,
