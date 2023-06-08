@@ -1,4 +1,7 @@
+import 'dart:async';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:rnd_flutter_app/pages/home_page.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
 import 'package:pinput/pinput.dart';
 
@@ -19,10 +22,63 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
   final pinController = TextEditingController();
   final focusNode = FocusNode();
   final formKey = GlobalKey<FormState>();
+
+  late Timer _timer;
+  bool _isLongPressed = false;
+  late DateTime _startTime;
+  double _progressValue = 0.0;
+
   @override
   void initState() {
     debugPrint('amount is ${widget.amount}');
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  _showSuccessAlert() {
+    CoolAlert.show(
+      context: context,
+      type: CoolAlertType.success,
+      text: "Your transaction was successful!",
+      // closeOnConfirmBtnTap: true,
+      onConfirmBtnTap: () {
+        debugPrint("I was HIT!!");
+        Navigator.of(context).pushReplacementNamed(AppRoutes.home);
+      },
+    );
+  }
+
+  void _startTimer() {
+    _startTime = DateTime.now();
+    _timer = Timer.periodic(Duration(milliseconds: 50), (_) {
+      // Calculate the elapsed time
+      final elapsedTime = DateTime.now().difference(_startTime);
+      // Update the progress value based on the elapsed time
+      setState(() {
+        _progressValue = elapsedTime.inMilliseconds / 2000.0;
+      });
+      if (elapsedTime >= const Duration(seconds: 2)) {
+        _stopTimer();
+        setState(() {
+          _isLongPressed = true;
+        });
+        _progressValue = 0.0;
+        _showSuccessAlert();
+      }
+    });
+  }
+
+  void _stopTimer() {
+    _timer.cancel();
+    _progressValue = 0.0;
+    setState(() {
+      _isLongPressed = false;
+    });
   }
 
   @override
@@ -157,18 +213,28 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
                 ),
               ),
               const SizedBox(height: 32.0),
+              LinearProgressIndicator(
+                value: _progressValue,
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                backgroundColor: Colors.grey[200],
+              ),
+              const SizedBox(height: 32.0),
               Center(
+                  child: GestureDetector(
+                onTapDown: (_) => _startTimer(),
+                onTapUp: (_) => _stopTimer(),
+                onTapCancel: () => _stopTimer(),
                 child: TextButton(
-                  onLongPress: () {
-                    debugPrint("confirmed CLICKED");
-                  },
+                  // onLongPress: () {
+                  //   debugPrint("confirmed CLICKED");
+                  // },
                   onPressed: () {
                     // focusNode.unfocus();
                     // debugPrint("confirmed CLICKED");
                   },
                   child: const Text('Validate'),
                 ),
-              )
+              ))
             ])));
   }
 }
