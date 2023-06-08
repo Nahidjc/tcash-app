@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:rnd_flutter_app/pages/home_page.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
 import 'package:pinput/pinput.dart';
 
@@ -38,6 +40,19 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
     super.dispose();
   }
 
+  _showSuccessAlert() {
+    CoolAlert.show(
+      context: context,
+      type: CoolAlertType.success,
+      text: "Your transaction was successful!",
+      // closeOnConfirmBtnTap: true,
+      onConfirmBtnTap: () {
+        debugPrint("I was HIT!!");
+        Navigator.of(context).pushReplacementNamed(AppRoutes.home);
+      },
+    );
+  }
+
   void _startTimer() {
     _startTime = DateTime.now();
     _timer = Timer.periodic(Duration(milliseconds: 50), (_) {
@@ -45,15 +60,15 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
       final elapsedTime = DateTime.now().difference(_startTime);
       // Update the progress value based on the elapsed time
       setState(() {
-        _progressValue = elapsedTime.inMilliseconds / 3000.0;
+        _progressValue = elapsedTime.inMilliseconds / 2000.0;
       });
-      if (elapsedTime >= const Duration(seconds: 3)) {
+      if (elapsedTime >= const Duration(seconds: 2)) {
         _stopTimer();
         setState(() {
           _isLongPressed = true;
         });
         _progressValue = 0.0;
-        print('Long press action triggered!');
+        _showSuccessAlert();
       }
     });
   }
