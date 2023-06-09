@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
-  final String text;
+  final Widget content;
   final VoidCallback onPressed;
 
   @override
   final Key? key;
 
   const CustomButton({
-    required this.text,
+    required this.content,
     required this.onPressed,
     this.key,
   }) : super(key: key);
@@ -22,8 +22,7 @@ class CustomButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
         gradient: const LinearGradient(
           colors: [
-            Color.fromARGB(255, 91, 114, 103),
-            Color.fromARGB(255, 3, 188, 244)
+            Colors.pinkAccent, Colors.pinkAccent
           ],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
@@ -41,13 +40,7 @@ class CustomButton extends StatelessWidget {
             ),
           ),
         ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontSize: 18.0,
-            color: Colors.white,
-          ),
-        ),
+        child: content,
       ),
     );
   }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:rnd_flutter_app/pages/home_page.dart';
+import 'package:rnd_flutter_app/provider/login_provider.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
 import 'package:rnd_flutter_app/widgets/custom_button.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -21,13 +24,12 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      String accountNumber = _accountNumberController.text;
-      String pin = _pinController.text;
+      Provider.of<AuthProvider>(context, listen: false)
+          .loginProvider(_accountNumberController.text, _pinController.text);
       _accountNumberController.clear();
       _pinController.clear();
-      Navigator.pushReplacementNamed(context, AppRoutes.home);
     }
   }
 
@@ -37,6 +39,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = Provider.of<AuthProvider>(context);
+    if (authState.isAuthenticated) {
+      return const HomePage();
+    }
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -61,10 +67,41 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 20.0),
+                if (!authState.isAuthenticated &&
+                    authState.errorMessage.isNotEmpty)
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 16.0),
+                    padding: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.error_outline,
+                          color: Colors.white,
+                          size: 24.0,
+                        ),
+                        const SizedBox(width: 8.0),
+                        Expanded(
+                          child: Text(
+                            authState.errorMessage,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 TextFormField(
                   controller: _accountNumberController,
                   keyboardType: TextInputType.number,
                   maxLength: 11,
+                  enabled: !authState.isLoading,
                   decoration: InputDecoration(
                     labelText: 'Account Number',
                     border: OutlineInputBorder(
@@ -89,6 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                   keyboardType: TextInputType.number,
                   obscureText: true,
                   maxLength: 6,
+                  enabled: !authState.isLoading,
                   decoration: InputDecoration(
                       labelText: 'Tcash PIN',
                       border: OutlineInputBorder(
@@ -107,9 +145,17 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 20.0),
                 SizedBox(
-                  width: double.infinity,
+                  width: MediaQuery.of(context).size.width * 0.90,
                   child: CustomButton(
-                    text: 'Login',
+                    content: authState.isLoading
+                        ? const CircularProgressIndicator()
+                        : const Text(
+                            "Login",
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              color: Colors.white,
+                            ),
+                          ),
                     onPressed: _submitForm,
                   ),
                 ),

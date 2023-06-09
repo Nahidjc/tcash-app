@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rnd_flutter_app/pages/app_drawer.dart';
 import 'package:rnd_flutter_app/pages/qr_code_widget.dart';
+import 'package:rnd_flutter_app/pages/tcash_login.dart';
 import 'package:rnd_flutter_app/pages/transaction_history.dart';
 import 'package:rnd_flutter_app/pages/user_profile.dart';
 import 'package:rnd_flutter_app/provider/login_provider.dart';
@@ -29,6 +30,11 @@ class GridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authState = Provider.of<AuthProvider>(context, listen: false);
+    if (!authState.isAuthenticated) {
+      Navigator.pushReplacementNamed(context, AppRoutes.login);
+      return Container();
+    }
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final parentWidth = constraints.maxWidth;
@@ -78,7 +84,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    context.read<AuthProvider>().token;
+    // context.read<AuthProvider>().token;
   }
 
   @override
@@ -92,6 +98,10 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
+    final authState = Provider.of<AuthProvider>(context);
+    if (!authState.isAuthenticated) {
+      return const LoginPage();
+    }
     return Scaffold(
         key: _scaffoldKey,
         endDrawer: SizedBox(

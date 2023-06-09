@@ -232,8 +232,14 @@ class _SignupPageState extends State<SignupPage> {
                     width: double.infinity,
                     height: 50.0,
                     child: CustomButton(
-                      text: 'Create Account',
-                      onPressed: _submitForm,
+                      content: const Text(
+                        "Create Account",
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                      onPressed: () {},
                     )),
                 const SizedBox(height: 20.0),
                 GestureDetector(

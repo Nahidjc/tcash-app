@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rnd_flutter_app/provider/login_provider.dart';
-import 'package:rnd_flutter_app/provider/todo_provider.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
 
 void main() {
   runApp(
-    MultiProvider(providers: [
-      ChangeNotifierProvider(create: (_) => TodoProvider()),
+    MultiProvider(
+        providers: [
       ChangeNotifierProvider(create: (_) => AuthProvider())
     ], child: const MyApp()
         ),

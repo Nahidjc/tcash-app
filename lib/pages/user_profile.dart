@@ -96,7 +96,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 SizedBox(
                   width: double.infinity,
                   child: CustomButton(
-                    text: 'Update',
+                    content: const Text(
+                      "Update User",
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        color: Colors.white,
+                      ),
+                    ),
                     onPressed: () {},
                   ),
                 ),
