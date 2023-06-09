@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rnd_flutter_app/pages/tcash_login.dart';
+import 'package:rnd_flutter_app/provider/login_provider.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
 import 'package:rnd_flutter_app/widgets/custom_button.dart';
 
@@ -9,12 +12,13 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  TextEditingController _mobileNoController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _confirmPasswordController = TextEditingController();
-  String _userType = 'Merchant';
-  final List<String> _userTypes = ['Merchant', 'Agent', 'Personal'];
+  final TextEditingController _mobileNoController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  String _userType = 'Personal';
+  final List<String> _userTypes = ['Personal', 'Agent', 'Merchant'];
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -27,19 +31,18 @@ class _SignupPageState extends State<SignupPage> {
     super.dispose();
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       String mobileNo = _mobileNoController.text;
       String email = _emailController.text;
       String password = _passwordController.text;
-
+      int userTypeIndex = _userTypes.indexOf(_userType);
+      Provider.of<AuthProvider>(context, listen: false)
+          .register(mobileNo, email, password, userTypeIndex + 1);
       _mobileNoController.clear();
       _emailController.clear();
       _passwordController.clear();
       _confirmPasswordController.clear();
-      setState(() {
-        _userType = 'Merchant';
-      });
     }
   }
 
@@ -49,10 +52,10 @@ class _SignupPageState extends State<SignupPage> {
   void _toggleObscured() {
     setState(() {
       _obscured = !_obscured;
-      if (textFieldFocusNode.hasPrimaryFocus)
-        return; // If focus is on text field, dont unfocus
-      textFieldFocusNode.canRequestFocus =
-          false; // Prevents focus if tap on eye
+      if (textFieldFocusNode.hasFocus) {
+        return;
+      }
+      textFieldFocusNode.canRequestFocus = false;
     });
   }
 
@@ -62,6 +65,10 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = Provider.of<AuthProvider>(context);
+    if (authState.isRegistered) {
+      return const LoginPage();
+    }
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -77,7 +84,38 @@ class _SignupPageState extends State<SignupPage> {
                   fit: BoxFit.cover,
                 ),
                 const SizedBox(height: 10.0),
+                if (!authState.isRegistered &&
+                    authState.errorMessage.isNotEmpty)
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 16.0),
+                    padding: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.error_outline,
+                          color: Colors.white,
+                          size: 24.0,
+                        ),
+                        const SizedBox(width: 8.0),
+                        Expanded(
+                          child: Text(
+                            authState.errorMessage,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 TextFormField(
+                  enabled: !authState.isLoading,
                   controller: _mobileNoController,
                   keyboardType: TextInputType.phone,
                   maxLength: 11,
@@ -93,7 +131,7 @@ class _SignupPageState extends State<SignupPage> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your mobile number';
                     }
-                    if (value.length != 10) {
+                    if (value.length != 11) {
                       return 'Mobile number must be exactly 10 digits';
                     }
                     return null;
@@ -101,6 +139,7 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 const SizedBox(height: 10.0),
                 TextFormField(
+                  enabled: !authState.isLoading,
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
@@ -123,6 +162,7 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 const SizedBox(height: 20.0),
                 TextFormField(
+                  enabled: !authState.isLoading,
                   controller: _passwordController,
                   keyboardType: TextInputType.number,
                   obscureText: _obscured,
@@ -159,6 +199,7 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 const SizedBox(height: 10.0),
                 TextFormField(
+                  enabled: !authState.isLoading,
                   controller: _confirmPasswordController,
                   obscureText: _obscured,
                   keyboardType: TextInputType.number,
@@ -232,14 +273,16 @@ class _SignupPageState extends State<SignupPage> {
                     width: double.infinity,
                     height: 50.0,
                     child: CustomButton(
-                      content: const Text(
+                      content: authState.isLoading
+                          ? const CircularProgressIndicator()
+                          : const Text(
                         "Create Account",
                         style: TextStyle(
                           fontSize: 18.0,
                           color: Colors.white,
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: _submitForm,
                     )),
                 const SizedBox(height: 20.0),
                 GestureDetector(
