@@ -4,15 +4,14 @@ import 'package:rnd_flutter_app/model/user_model.dart';
 import 'package:rnd_flutter_app/provider/user_provider.dart';
 
 class MyAppBar extends StatefulWidget implements PreferredSizeWidget {
-
   final String userId;
   final VoidCallback openAppDrawer;
 
-  const MyAppBar(
-      {Key? key,
-      required this.userId,
-      required this.openAppDrawer})
-      : super(key: key);
+  const MyAppBar({
+    Key? key,
+    required this.userId,
+    required this.openAppDrawer,
+  }) : super(key: key);
 
   @override
   State<MyAppBar> createState() => _MyAppBarState();
@@ -26,21 +25,12 @@ class _MyAppBarState extends State<MyAppBar>
   late AnimationController _animationController;
   late Animation<Offset> _offsetAnimation;
   bool _showBalance = false;
-
   UserDetails? userDetails;
-  void fetchUserDetails() async {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final fetchedUserDetails =
-        await userProvider.fetchUserDetailsById(widget.userId);
-    setState(() {
-      userDetails = fetchedUserDetails;
-    });
-  }
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    fetchUserDetails();
     _animationController = AnimationController(
       duration: const Duration(seconds: 1),
       vsync: this,
@@ -50,6 +40,32 @@ class _MyAppBarState extends State<MyAppBar>
       begin: const Offset(-1.0, 0.0),
       end: const Offset(0.0, 0.0),
     ).animate(_animationController);
+
+    // Fetch user details
+    fetchUserDetails();
+  }
+
+  Future<void> fetchUserDetails() async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      final fetchedUserDetails =
+          await userProvider.fetchUserDetailsById(widget.userId);
+
+      setState(() {
+        userDetails = fetchedUserDetails;
+        _isLoading = false;
+      });
+    } catch (error) {
+      setState(() {
+        _isLoading = false;
+      });
+      // Handle error
+    }
   }
 
   void _toggleShowBalance() {
@@ -79,12 +95,6 @@ class _MyAppBarState extends State<MyAppBar>
 
   @override
   Widget build(BuildContext context) {
-    double? balance = userDetails?.currentBalance;
-    final name = userDetails?.name ?? "Change Your Name";
-    final profile = userDetails?.profilePic ??
-        "http://s3.amazonaws.com/37assets/svn/765-default-avatar.png";
-
-
     return AppBar(
       automaticallyImplyLeading: false,
       leading: null,
@@ -106,67 +116,21 @@ class _MyAppBarState extends State<MyAppBar>
       iconTheme: const IconThemeData(
         color: Colors.white,
       ),
-      title: Row(
-        children: <Widget>[
-          CircleAvatar(
-            backgroundImage: NetworkImage(profile),
-          ),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
+      title: _isLoading
+          ? Center(
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  color: Colors.white, // Set color to white
+                  strokeWidth: 2, // Reduce the stroke width
                 ),
               ),
-              const SizedBox(height: 5),
-              GestureDetector(
-                onTap: _toggleShowBalance,
-                child: Container(
-                  width: 130.0,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 4.0,
-                    horizontal: 8.0,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 10.0),
-                      SlideTransition(
-                        position: _offsetAnimation,
-                        child: const Text(
-                          '৳',
-                          style: TextStyle(
-                            color: Colors.pink,
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 4.0),
-                      Text(
-                        _showBalance ? '$balance' : 'Tap for Balance',
-                        style: const TextStyle(
-                          color: Colors.pink,
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+            ) // Centered loader with white color and smaller size
+          : userDetails != null
+              ? _buildAppBarContent()
+              : Text(
+                  'Error fetching user details'), // Show error message if userDetails is null
       actions: <Widget>[
         IconButton(
           icon: const Icon(Icons.notifications),
@@ -179,6 +143,75 @@ class _MyAppBarState extends State<MyAppBar>
           onPressed: () {
             widget.openAppDrawer();
           },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAppBarContent() {
+    double? balance = userDetails!.currentBalance;
+    final name = userDetails!.name ?? "Change Your Name";
+    final profile = userDetails!.profilePic ??
+        "http://s3.amazonaws.com/37assets/svn/765-default-avatar.png";
+
+    return Row(
+      children: <Widget>[
+        CircleAvatar(
+          backgroundImage: NetworkImage(profile),
+        ),
+        const SizedBox(width: 10),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              name,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ),
+            ),
+            const SizedBox(height: 5),
+            GestureDetector(
+              onTap: _toggleShowBalance,
+              child: Container(
+                width: 130.0,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 4.0,
+                  horizontal: 8.0,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 10.0),
+                    SlideTransition(
+                      position: _offsetAnimation,
+                      child: const Text(
+                        '৳',
+                        style: TextStyle(
+                          color: Colors.pink,
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 4.0),
+                    Text(
+                      _showBalance ? '$balance' : 'Tap for Balance',
+                      style: const TextStyle(
+                        color: Colors.pink,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
