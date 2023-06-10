@@ -131,8 +131,14 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
               SizedBox(
                 width: double.infinity,
                 child: CustomButton(
-                  text: 'Next',
-                  onPressed: _submitForm,
+                  content: const Text(
+                    "Next",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                  onPressed: () {},
                 ),
               ),
             ],

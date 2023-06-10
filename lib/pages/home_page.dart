@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rnd_flutter_app/pages/app_drawer.dart';
 import 'package:rnd_flutter_app/pages/qr_code_widget.dart';
+import 'package:rnd_flutter_app/pages/tcash_login.dart';
 import 'package:rnd_flutter_app/pages/transaction_history.dart';
 import 'package:rnd_flutter_app/pages/user_profile.dart';
 import 'package:rnd_flutter_app/provider/login_provider.dart';
@@ -29,13 +30,18 @@ class GridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authState = Provider.of<AuthProvider>(context, listen: false);
+    if (!authState.isAuthenticated) {
+      Navigator.pushReplacementNamed(context, AppRoutes.login);
+      return Container();
+    }
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final parentWidth = constraints.maxWidth;
         final parentHeight = constraints.maxHeight;
 
         final iconSize = parentHeight * 0.45;
-        final textSize = parentHeight * 0.12; 
+        final textSize = parentHeight * 0.12;
 
         return GestureDetector(
           onTap: onTap,
@@ -78,7 +84,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    context.read<AuthProvider>().token;
   }
 
   @override
@@ -86,12 +91,16 @@ class _HomePageState extends State<HomePage> {
     _scrollController.dispose();
     super.dispose();
   }
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
+    final authState = Provider.of<AuthProvider>(context);
+    if (!authState.isAuthenticated) {
+      return const LoginPage();
+    }
     return Scaffold(
         key: _scaffoldKey,
         endDrawer: SizedBox(
@@ -99,37 +108,32 @@ class _HomePageState extends State<HomePage> {
           child: const AppDrawer(),
         ),
         appBar: MyAppBar(
-          name: "Nahid Hasan",
-          profilePicUrl: "https://avatars.githubusercontent.com/u/113003788",
-          initialBalance: 500,
-            openAppDrawer: openAppDrawer
-        ),
+            userId: authState.userId, openAppDrawer: openAppDrawer),
         body: Padding(
-            padding: const EdgeInsets.all(
-                10.0),
+          padding: const EdgeInsets.all(10.0),
           child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Column(
-                    children: [
-                      Container(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              children: [
+                Container(
                   child: GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 4,
-                mainAxisSpacing: 5,
-                crossAxisSpacing: 5,
-                children: [
-                  GridItem(
-                      key: UniqueKey(),
-                      title: 'Send Money',
-                      onTap: () {
-                        Navigator.pushReplacementNamed(
-                            context, AppRoutes.sendmoney);
-                      },
-                      icon: Icons.send),
-                  GridItem(
-                      key: UniqueKey(),
-                      title: 'Add Money',
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: 4,
+                    mainAxisSpacing: 5,
+                    crossAxisSpacing: 5,
+                    children: [
+                      GridItem(
+                          key: UniqueKey(),
+                          title: 'Send Money',
+                          onTap: () {
+                            Navigator.pushReplacementNamed(
+                                context, AppRoutes.sendmoney);
+                          },
+                          icon: Icons.send),
+                      GridItem(
+                          key: UniqueKey(),
+                          title: 'Add Money',
                           onTap: () {
                             Navigator.push(
                               context,
@@ -139,23 +143,23 @@ class _HomePageState extends State<HomePage> {
                               ),
                             );
                           },
-                      icon: Icons.attach_money),
-                  GridItem(
-                      key: UniqueKey(),
-                      title: 'Cash Out',
-                      onTap: () {
-                         Navigator.pushReplacementNamed(
-                            context, AppRoutes.cashout);
-                      },
-                      icon: Icons.monetization_on),
-                  GridItem(
-                      key: UniqueKey(),
-                      title: 'Payment',
-                      onTap: () {
-                        Navigator.pushReplacementNamed(
-                            context, AppRoutes.payment);
-                      },
-                      icon: Icons.payment),
+                          icon: Icons.attach_money),
+                      GridItem(
+                          key: UniqueKey(),
+                          title: 'Cash Out',
+                          onTap: () {
+                            Navigator.pushReplacementNamed(
+                                context, AppRoutes.cashout);
+                          },
+                          icon: Icons.monetization_on),
+                      GridItem(
+                          key: UniqueKey(),
+                          title: 'Payment',
+                          onTap: () {
+                            Navigator.pushReplacementNamed(
+                                context, AppRoutes.payment);
+                          },
+                          icon: Icons.payment),
                       GridItem(
                           key: UniqueKey(),
                           title: 'Pay Bill',
@@ -210,13 +214,63 @@ class _HomePageState extends State<HomePage> {
                         title: 'Loan',
                         icon: Icons.monetization_on,
                       ),
-    
-                ],
-              ),
-                      ),
-                      Container(
-                  margin: const EdgeInsets.only(top: 15),
-                  padding: const EdgeInsets.all(20),
+                    ],
+                  ),
+                ),
+                Container(
+                    margin: const EdgeInsets.only(top: 15),
+                    padding: const EdgeInsets.all(20),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1),
+                          spreadRadius: 1,
+                          blurRadius: 2,
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Financial Management',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Your expense today ৳ 24',
+                              style: TextStyle(
+                                color: Colors.pink.shade400,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Column(
+                          children: [
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.pink,
+                            ),
+                          ],
+                        )
+                      ],
+                    )),
+                Container(
+                  height: 215,
+                  margin: const EdgeInsets.only(top: 10),
+                  padding: const EdgeInsets.only(left: 10, right: 10),
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -226,67 +280,14 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.grey.withOpacity(0.1),
                         spreadRadius: 1,
                         blurRadius: 2,
-                        offset:
-                            const Offset(0, 1), 
+                        offset: const Offset(0, 1),
                       ),
                     ],
                   ),
-                          child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                                  const Text(
-                            'Financial Management',
-                            style: TextStyle(
-                                      color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                            ),
-                          ),
-                                  const SizedBox(height: 8),
-                          Text(
-                            'Your expense today ৳ 24',
-                            style: TextStyle(
-                                      color: Colors.pink.shade400,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                              const Column(
-                        children: [
-                                  Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: Colors.pink,
-                                  ),
-                        ],
-                      )
-                    ],
-                  )),
-                Container(
-                height: 215,
-                margin: const EdgeInsets.only(top: 10),
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      spreadRadius: 1,
-                      blurRadius: 2,
-                      offset: const Offset(0, 1),
-                    ),
-                  ],
-                ),
-                child: Scrollbar(
-                    controller: _scrollController,
-                    child: const TransactionHistory()),
-              )
-              
+                  child: Scrollbar(
+                      controller: _scrollController,
+                      child: const TransactionHistory()),
+                )
               ],
             ),
           ),
@@ -325,8 +326,8 @@ class _HomePageState extends State<HomePage> {
           ],
         ));
   }
+
   void openAppDrawer() {
     _scaffoldKey.currentState!.openEndDrawer();
   }
-
 }
