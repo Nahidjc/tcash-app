@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:rnd_flutter_app/api_caller/app_url.dart';
 import 'dart:async';
-
+import 'package:rnd_flutter_app/model/user_model.dart';
 import 'package:rnd_flutter_app/model/jwt_token_util.dart';
 
 class AuthProvider extends ChangeNotifier {
+  UserDetails? _userDetails;
+  UserDetails? get userDetails => _userDetails;
   bool _isAuthenticated = false;
   bool _isRegistered = false;
   String _errorMessage = '';
@@ -17,6 +19,8 @@ class AuthProvider extends ChangeNotifier {
   bool get isAuthenticated => _isAuthenticated;
   bool get isLoading => _isLoading;
   bool get isRegistered => _isRegistered;
+  double? _accountBalance = 0;
+  double? get accountBalance => _accountBalance;
   setAuthenticated(bool value) {
     _isAuthenticated = value;
     notifyListeners();
@@ -44,6 +48,9 @@ class AuthProvider extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         var jsonResponse = json.decode(response.body);
+        _userDetails = UserDetails.fromJson(jsonResponse['user']);
+        _accountBalance = _userDetails?.currentBalance;
+        notifyListeners();
         final decryptedData =
             JwtTokenUtil.decryptJwtToken(jsonResponse['token']);
         _userId = decryptedData['id'];

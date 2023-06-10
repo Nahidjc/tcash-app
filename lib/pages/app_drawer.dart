@@ -4,7 +4,6 @@ import 'package:rnd_flutter_app/provider/login_provider.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     final authState = Provider.of<AuthProvider>(context);

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rnd_flutter_app/model/user_model.dart';
+import 'package:rnd_flutter_app/provider/user_provider.dart';
 
 class MyAppBar extends StatefulWidget implements PreferredSizeWidget {
-  final String name;
-  final String profilePicUrl;
-  final double initialBalance;
+
+  final String userId;
   final VoidCallback openAppDrawer;
 
   const MyAppBar(
       {Key? key,
-      required this.name,
-      required this.profilePicUrl,
-      required this.initialBalance,
+      required this.userId,
       required this.openAppDrawer})
       : super(key: key);
 
@@ -25,14 +25,22 @@ class _MyAppBarState extends State<MyAppBar>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Offset> _offsetAnimation;
-  double _currentBalance = 0.0;
   bool _showBalance = false;
+
+  UserDetails? userDetails;
+  void fetchUserDetails() async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final fetchedUserDetails =
+        await userProvider.fetchUserDetailsById(widget.userId);
+    setState(() {
+      userDetails = fetchedUserDetails;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    _currentBalance = widget.initialBalance;
-
+    fetchUserDetails();
     _animationController = AnimationController(
       duration: const Duration(seconds: 1),
       vsync: this,
@@ -71,6 +79,12 @@ class _MyAppBarState extends State<MyAppBar>
 
   @override
   Widget build(BuildContext context) {
+    double? balance = userDetails?.currentBalance;
+    final name = userDetails?.name ?? "Change Your Name";
+    final profile = userDetails?.profilePic ??
+        "http://s3.amazonaws.com/37assets/svn/765-default-avatar.png";
+
+
     return AppBar(
       automaticallyImplyLeading: false,
       leading: null,
@@ -95,14 +109,14 @@ class _MyAppBarState extends State<MyAppBar>
       title: Row(
         children: <Widget>[
           CircleAvatar(
-            backgroundImage: NetworkImage(widget.profilePicUrl),
+            backgroundImage: NetworkImage(profile),
           ),
           const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.name,
+                name,
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -138,7 +152,7 @@ class _MyAppBarState extends State<MyAppBar>
                       ),
                       const SizedBox(width: 4.0),
                       Text(
-                        _showBalance ? '$_currentBalance' : 'Tap for Balance',
+                        _showBalance ? '$balance' : 'Tap for Balance',
                         style: const TextStyle(
                           color: Colors.pink,
                           fontSize: 12.0,

@@ -4,6 +4,8 @@ import 'package:rnd_flutter_app/provider/login_provider.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
 import 'package:rnd_flutter_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
+import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,6 +19,29 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _pinController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  void setInitialAccountNumber(String accountNumber) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('accountNumber', accountNumber);
+  }
+
+  Future<String> getInitialAccountNumber() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('accountNumber') ?? '';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    retrieveInitialAccountNumber();
+  }
+
+  void retrieveInitialAccountNumber() async {
+    String initialAccountNumber = await getInitialAccountNumber();
+    setState(() {
+      _accountNumberController.text = initialAccountNumber;
+    });
+  }
+
   @override
   void dispose() {
     _accountNumberController.dispose();
@@ -28,6 +53,7 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKey.currentState!.validate()) {
       Provider.of<AuthProvider>(context, listen: false)
           .loginProvider(_accountNumberController.text, _pinController.text);
+      setInitialAccountNumber(_accountNumberController.text);
       _accountNumberController.clear();
       _pinController.clear();
     }

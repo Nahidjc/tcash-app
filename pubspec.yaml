@@ -24,6 +24,7 @@ dependencies:
   pinput: ^2.2.31
   carousel_slider: ^4.0.0
   cool_alert: ^2.0.1
+  shared_preferences: ^2.1.2
 
 
 dev_dependencies:
