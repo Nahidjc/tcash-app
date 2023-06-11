@@ -305,8 +305,10 @@ class _HomePageState extends State<HomePage> {
                 ));
               } else if (index == 2) {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const UserProfilePage(),
+                  builder: (context) =>
+                      UserProfilePage(userId: authState.userId),
                 ));
+
               }
             });
           },
