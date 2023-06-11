@@ -22,6 +22,7 @@ class UserProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         final user = UserDetails.fromJson(data['user']);
         _isLoading = false;
+        _userDetails = user;
         notifyListeners();
         return user;
       } else {
