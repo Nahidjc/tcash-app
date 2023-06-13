@@ -47,8 +47,11 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
       text: "Your transaction was successful!",
       // closeOnConfirmBtnTap: true,
       onConfirmBtnTap: () {
-        debugPrint("I was HIT!!");
-        Navigator.of(context).pushReplacementNamed(AppRoutes.home);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        ).then(
+            (value) => Navigator.of(context).popAndPushNamed(AppRoutes.home));
       },
     );
   }
