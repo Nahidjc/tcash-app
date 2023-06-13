@@ -117,127 +117,119 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
           ),
           centerTitle: true,
         ),
-        body: Padding(
-            padding: const EdgeInsets.all(26.0),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Text(
-                'Receiver Account:',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
-                ),
+        body: Container(
+        padding: const EdgeInsets.all(26.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Receiver Account:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
               ),
-              const SizedBox(height: 8.0),
-              Text(
-                '${widget.accountNo}',
-                style: const TextStyle(fontSize: 14.0),
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              '${widget.accountNo}',
+              style: const TextStyle(fontSize: 14.0),
+            ),
+            const SizedBox(height: 16.0),
+            const Text(
+              'Amount:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
               ),
-              const SizedBox(height: 16.0),
-              const Text(
-                'Amount:',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
-                ),
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              '${widget.amount}',
+              style: const TextStyle(fontSize: 14.0),
+            ),
+            const SizedBox(height: 16.0),
+            const Text(
+              'Remaining Balance:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
               ),
-              const SizedBox(height: 8.0),
-              Text(
-                '${widget.amount}',
-                style: const TextStyle(fontSize: 14.0),
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              '${widget.remainingBalance}',
+              style: const TextStyle(fontSize: 14.0),
+            ),
+            const SizedBox(height: 32.0),
+            Pinput(
+              controller: pinController,
+              length: 6,
+              focusNode: focusNode,
+              obscureText: true,
+              obscuringWidget: Icon(
+                Icons.circle,
+                color: Colors.pink.shade300,
               ),
-              const SizedBox(height: 16.0),
-              const Text(
-                'Remaining Balance:',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              Text(
-                '${widget.remainingBalance}',
-                style: const TextStyle(fontSize: 14.0),
-              ),
-              const SizedBox(height: 32.0),
-              Pinput(
-                controller: pinController,
-                length: 6,
-                focusNode: focusNode,
-                obscureText: true,
-                obscuringWidget: Icon(
-                  Icons.circle,
-                  color: Colors.pink.shade300,
-                ),
-                // androidSmsAutofillMethod:
-                //   AndroidSmsAutofillMethod.smsUserConsentApi,
-                // listenForMultipleSmsOnAndroid: true,
-                defaultPinTheme: defaultPinTheme,
-                validator: (value) {
-                  return value == '000000' ? null : 'Pin is incorrect';
-                },
-                // onClipboardFound: (value) {
-                //   debugPrint('onClipboardFound: $value');
-                //   pinController.setText(value);
-                // },
-                hapticFeedbackType: HapticFeedbackType.lightImpact,
-                onCompleted: (pin) {
-                  debugPrint('onCompleted: $pin');
-                },
-                onChanged: (value) {
-                  debugPrint('onChanged: $value');
-                },
-                cursor: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 9),
-                      width: 22,
-                      height: 1,
-                      color: focusedBorderColor,
-                    ),
-                  ],
-                ),
-                focusedPinTheme: defaultPinTheme.copyWith(
-                  decoration: defaultPinTheme.decoration!.copyWith(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: focusedBorderColor),
+              defaultPinTheme: defaultPinTheme,
+              validator: (value) {
+                return value == '000000' ? null : 'Pin is incorrect';
+              },
+              hapticFeedbackType: HapticFeedbackType.lightImpact,
+              onCompleted: (pin) {
+                debugPrint('onCompleted: $pin');
+              },
+              onChanged: (value) {
+                debugPrint('onChanged: $value');
+              },
+              cursor: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 9),
+                    width: 22,
+                    height: 1,
+                    color: focusedBorderColor,
                   ),
-                ),
-                submittedPinTheme: defaultPinTheme.copyWith(
-                  decoration: defaultPinTheme.decoration!.copyWith(
-                    color: fillColor,
-                    borderRadius: BorderRadius.circular(19),
-                    border: Border.all(color: focusedBorderColor),
-                  ),
-                ),
-                errorPinTheme: defaultPinTheme.copyBorderWith(
-                  border: Border.all(color: Colors.redAccent),
+                ],
+              ),
+              focusedPinTheme: defaultPinTheme.copyWith(
+                decoration: defaultPinTheme.decoration!.copyWith(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: focusedBorderColor),
                 ),
               ),
-              const SizedBox(height: 32.0),
-              LinearProgressIndicator(
-                value: _progressValue,
-                valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
-                backgroundColor: Colors.grey[200],
+              submittedPinTheme: defaultPinTheme.copyWith(
+                decoration: defaultPinTheme.decoration!.copyWith(
+                  color: fillColor,
+                  borderRadius: BorderRadius.circular(19),
+                  border: Border.all(color: focusedBorderColor),
+                ),
               ),
-              const SizedBox(height: 32.0),
-              Center(
-                  child: GestureDetector(
+              errorPinTheme: defaultPinTheme.copyBorderWith(
+                border: Border.all(color: Colors.redAccent),
+              ),
+            ),
+            const SizedBox(height: 32.0),
+            LinearProgressIndicator(
+              value: _progressValue,
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+              backgroundColor: Colors.grey[200],
+            ),
+            const SizedBox(height: 32.0),
+            Center(
+              child: GestureDetector(
                 onTapDown: (_) => _startTimer(),
                 onTapUp: (_) => _stopTimer(),
                 onTapCancel: () => _stopTimer(),
                 child: TextButton(
-                  // onLongPress: () {
-                  //   debugPrint("confirmed CLICKED");
-                  // },
-                  onPressed: () {
-                    // focusNode.unfocus();
-                    // debugPrint("confirmed CLICKED");
-                  },
+                  onPressed: () {},
                   child: const Text('Validate'),
                 ),
-              ))
-            ])));
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
