@@ -25,6 +25,7 @@ dependencies:
   carousel_slider: ^4.0.0
   cool_alert: ^2.0.1
   shared_preferences: ^2.1.2
+  fluttertoast: ^8.0.8
 
 
 dev_dependencies:

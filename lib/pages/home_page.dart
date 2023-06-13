@@ -30,11 +30,6 @@ class GridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authState = Provider.of<AuthProvider>(context, listen: false);
-    if (!authState.isAuthenticated) {
-      Navigator.pushReplacementNamed(context, AppRoutes.login);
-      return Container();
-    }
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final parentWidth = constraints.maxWidth;
@@ -130,7 +125,7 @@ class _HomePageState extends State<HomePage> {
                             Navigator.pushReplacementNamed(
                                 context, AppRoutes.sendmoney);
                           },
-                          icon: Icons.send),
+                          icon: Icons.swap_horizontal_circle),
                       GridItem(
                           key: UniqueKey(),
                           title: 'Add Money',
@@ -163,7 +158,7 @@ class _HomePageState extends State<HomePage> {
                       GridItem(
                           key: UniqueKey(),
                           title: 'Pay Bill',
-                          icon: Icons.payment,
+                          icon: Icons.receipt_long,
                           onTap: () {
                             Navigator.push(
                               context,
@@ -297,6 +292,7 @@ class _HomePageState extends State<HomePage> {
           showUnselectedLabels: false,
           currentIndex: _currentIndex,
           onTap: (int index) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
             setState(() {
               _currentIndex = index;
               if (index == 1) {
@@ -305,11 +301,11 @@ class _HomePageState extends State<HomePage> {
                 ));
               } else if (index == 2) {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) =>
-                      UserProfilePage(userId: authState.userId),
-                ));
-
+                    builder: (context) =>
+                        UserProfilePage(userId: authState.userId),
+                  ));
               }
+            });
             });
           },
           items: const <BottomNavigationBarItem>[

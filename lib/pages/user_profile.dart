@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:rnd_flutter_app/model/user_model.dart';
 import 'package:rnd_flutter_app/provider/user_provider.dart';
 import 'package:rnd_flutter_app/widgets/custom_appbar.dart';
+import 'package:rnd_flutter_app/widgets/custom_button.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class UserProfilePage extends StatefulWidget {
   final String userId;
@@ -30,7 +32,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
     try {
       final img = await picker.pickImage(source: ImageSource.gallery);
       if (img != null) {
-        // final imageTemporary = File(img.path);
         setState(() {
           image = File(img.path);
         });
@@ -62,6 +63,16 @@ class _UserProfilePageState extends State<UserProfilePage> {
       emailController.text = userDetails!.email ?? '';
       usernameController.text = userDetails!.username ?? '';
     }
+  }
+
+  void showToastAfterupdateProfile() {
+    Fluttertoast.showToast(
+      msg: 'Update successful',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.grey[800],
+      textColor: Colors.white,
+    );
   }
 
   @override
@@ -114,14 +125,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 height: 80,
                               )
                             : null,
-                        // child: image == null
-                        //     ? Image.asset(
-                        //         'assets/images/avatar.png',
-                        //         width: 80,
-                        //         height: 80,
-                        //       )
-                        //     : Image.file(image!,
-                        //         height: 80, width: 80, fit: BoxFit.cover),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -151,21 +154,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     const SizedBox(height: 26),
                     SizedBox(
                       width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          final updatedName = nameController.text;
-                          final updatedEmail = emailController.text;
-                          final updatedUsername = usernameController.text;
-
-                          userProvider.updateUserProfile(
-                            name: updatedName,
-                            email: updatedEmail,
-                            username: updatedUsername,
-                            profilePicPath: image?.path,
-                            userId: widget.userId,
-                          );
-                        },
-                        child: userProvider.isLoading
+                      child: CustomButton(
+                        content: userProvider.isLoading
                             ? const CircularProgressIndicator()
                             : const Text(
                                 'Update User',
@@ -174,6 +164,23 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                   color: Colors.white,
                                 ),
                               ),
+                        onPressed: () async {
+                          final updatedName = nameController.text;
+                          final updatedEmail = emailController.text;
+                          final updatedUsername = usernameController.text;
+
+                          final isUpdate = await userProvider.updateUserProfile(
+                            name: updatedName,
+                            email: updatedEmail,
+                            username: updatedUsername,
+                            profilePicPath: image?.path,
+                            userId: widget.userId,
+                          );
+                          if (isUpdate) {
+                            showToastAfterupdateProfile();
+                          }
+                          
+                        },
                       ),
                     ),
                   ],

@@ -1,9 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rnd_flutter_app/provider/login_provider.dart';
+import 'package:rnd_flutter_app/provider/user_provider.dart';
 
-class AppDrawer extends StatelessWidget {
+class AppDrawer extends StatefulWidget {
   const AppDrawer({Key? key}) : super(key: key);
+
+  @override
+  State<AppDrawer> createState() => _AppDrawerState();
+}
+
+class _AppDrawerState extends State<AppDrawer> {
+  String? name;
+  String? profile;
+  UserProvider? userProvider;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      userProvider = Provider.of<UserProvider>(context, listen: false);
+      setState(() {
+        name = userProvider?.userDetails?.name;
+        profile = userProvider?.userDetails?.profilePic;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final authState = Provider.of<AuthProvider>(context);
@@ -16,18 +38,21 @@ class AppDrawer extends StatelessWidget {
               height: MediaQuery.of(context).size.width * 0.3,
               child: DrawerHeader(
                 decoration: BoxDecoration(color: Colors.pink.shade400),
-                child: const Center(
+                child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CircleAvatar(
                         radius: 25,
-                        backgroundImage: AssetImage('assets/images/avatar.png'),
+                        backgroundImage: profile != null
+                            ? NetworkImage(profile!)
+                            : const AssetImage('assets/images/avatar.png')
+                                as ImageProvider<Object>?,
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Text(
-                        'Nahid Hasan',
-                        style: TextStyle(
+                        name ?? '',
+                        style: const TextStyle(
                           fontSize: 14,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,

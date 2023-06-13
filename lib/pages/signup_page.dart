@@ -123,7 +123,7 @@ class _SignupPageState extends State<SignupPage> {
                     labelText: 'Mobile Number',
                     border: OutlineInputBorder(
                       borderRadius:
-                          BorderRadius.circular(8), // Apply corner radius
+                          BorderRadius.circular(8), 
                     ),
                     prefixIcon: const Icon(Icons.phone_rounded, size: 24),
                   ),
