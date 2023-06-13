@@ -36,7 +36,7 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> updateUserProfile({
+  Future<bool> updateUserProfile({
     String? name,
     String? email,
     String? username,
@@ -65,13 +65,16 @@ class UserProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         _isLoading = false;
         notifyListeners();
+        return true;
       } else {
         _isLoading = false;
         notifyListeners();
+        return false;
       }
     } catch (error) {
       _isLoading = false;
       notifyListeners();
+      return false;
     } finally {
       _isLoading = false;
       notifyListeners();
