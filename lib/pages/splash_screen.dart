@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+// import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
+import 'package:rnd_flutter_app/widgets/custom_progress.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -18,12 +19,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
         body: Center(
-      child: SpinKitSquareCircle(
-        color: Colors.pink.shade400,
-        size: 50.0,
-      ),
+      child: CustomLoadingAnimation(),
     ));
   }
 }
