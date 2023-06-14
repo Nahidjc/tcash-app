@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rnd_flutter_app/pages/components/password_confirm.dart';
+import 'package:rnd_flutter_app/provider/user_provider.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
-import 'dart:developer' as dev;
+import 'package:rnd_flutter_app/widgets/custom_button.dart';
 
 class ConfirmationData {
   final double amount;
   final String accountNo;
   final double remainingBalance;
+  final double charge;
 
-  ConfirmationData(this.amount, this.accountNo, this.remainingBalance);
+  ConfirmationData(
+      this.amount, this.accountNo, this.remainingBalance, this.charge);
 }
 
 class AmountConfirm extends StatefulWidget {
@@ -23,25 +27,19 @@ class AmountConfirm extends StatefulWidget {
 class _AmountConfirmState extends State<AmountConfirm> {
   final TextEditingController _amountController = TextEditingController();
   String amount = '';
-  double availableBalance = 500.00;
+  double availableBalance = 0;
   double remainingBalance = 0;
-
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {
-  debugPrint(widget.accountNo);
+    final userDetails =
+        Provider.of<UserProvider>(context, listen: false).userDetails;
+    availableBalance = userDetails?.currentBalance ?? 0.0;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    bool isButtonDisabled = _amountController.text.isEmpty ||
-        double.tryParse(_amountController.text) == null ||
-        double.parse(_amountController.text) > availableBalance;
-    bool showError = _amountController.text.isNotEmpty && isButtonDisabled;
-
-    Color borderSideColor =
-        showError ? Colors.red : Color.fromARGB(255, 2, 183, 255);
-
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.pink.shade300,
@@ -58,28 +56,30 @@ class _AmountConfirmState extends State<AmountConfirm> {
           centerTitle: true,
         ),
         body: Padding(
-            padding: const EdgeInsets.all(26.0),
+          padding: const EdgeInsets.all(26.0),
+          child: Form(
+            key: _formKey,
             child: Column(
               children: [
-                TextField(
+                TextFormField(
                   controller: _amountController,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Enter Amount',
                     border: OutlineInputBorder(),
-                    errorText: showError
-                        ? 'Amount must be less or equal to current balance'
-                        : null,
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: borderSideColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: borderSideColor),
-                    ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter an amount.';
+                    }
+                    double enteredAmount = double.tryParse(value) ?? 0.0;
+                    double calculatedAmount =
+                        calculateAmountWithPercentage(enteredAmount);
+                    if (calculatedAmount > availableBalance) {
+                      return 'Amount exceeds available balance.';
+                    }
+                    return null;
+                  },
                   onChanged: (value) {
                     setState(() {
                       amount = value;
@@ -96,38 +96,58 @@ class _AmountConfirmState extends State<AmountConfirm> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  child: ElevatedButton(
-                    onPressed: isButtonDisabled
-                        ? null
-                        : () {
-                            ConfirmationData data = ConfirmationData(
-                              double.parse(_amountController.text),
-                              widget.accountNo as String,
-                              (availableBalance-double.parse(_amountController.text)),
-                            );
-                            confirmAmount(data);
-                          },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        side: const BorderSide(
-                            color: Color.fromARGB(255, 2, 183, 255)),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.70,
+                  child: CustomButton(
+                    content: const Text(
+                      "Next",
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        color: Colors.white,
                       ),
                     ),
-                    child: const Text('Next'),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        ConfirmationData data = ConfirmationData(
+                            double.parse(_amountController.text),
+                            widget.accountNo as String,
+                            calculateRemainingBalance(availableBalance,
+                                double.parse(_amountController.text)),
+                            calculateCharge(
+                                double.parse(_amountController.text)));
+                        confirmAmount(data);
+                      }
+                    },
                   ),
                 ),
               ],
-            )));
+            ),
+          ),
+        ));
   }
 
   void confirmAmount(ConfirmationData data) async {
-     Navigator.of(context).push(MaterialPageRoute(
-    builder: (context) => PasswordConfirm(accountNo: data.accountNo, amount: data.amount,remainingBalance:data.remainingBalance),
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => PasswordConfirm(
+          accountNo: data.accountNo,
+          amount: data.amount,
+          remainingBalance: data.remainingBalance,
+          charge: data.charge),
     ));
+  }
+
+  double calculateAmountWithPercentage(double amount) {
+    return amount + (0.0099 * amount);
+  }
+
+  double calculateCharge(double amount) {
+    double chargePercentage = 0.0099;
+    double charge = amount * chargePercentage;
+    return charge;
+  }
+
+  double calculateRemainingBalance(double currentBalance, double amount) {
+    double deductionAmount = amount + (0.099 * amount);
+    return currentBalance - deductionAmount;
   }
 }

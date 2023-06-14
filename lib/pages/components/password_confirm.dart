@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rnd_flutter_app/pages/home_page.dart';
+import 'package:rnd_flutter_app/provider/user_provider.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
 import 'package:pinput/pinput.dart';
 
@@ -9,9 +11,14 @@ class PasswordConfirm extends StatefulWidget {
   final String? accountNo;
   final double? amount;
   final double? remainingBalance;
+  final double? charge;
 
   const PasswordConfirm(
-      {Key? key, this.accountNo, this.amount, this.remainingBalance})
+      {Key? key,
+      this.accountNo,
+      this.amount,
+      this.remainingBalance,
+      this.charge})
       : super(key: key);
 
   @override
@@ -24,19 +31,19 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
   final formKey = GlobalKey<FormState>();
 
   late Timer _timer;
-  bool _isLongPressed = false;
+  bool _isLongPressed = false; // ignore: unused_field
   late DateTime _startTime;
   double _progressValue = 0.0;
+  bool isLoading = false;
 
   @override
   void initState() {
-    debugPrint('amount is ${widget.amount}');
     super.initState();
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _timer.cancel();
     super.dispose();
   }
 
@@ -58,10 +65,8 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
 
   void _startTimer() {
     _startTime = DateTime.now();
-    _timer = Timer.periodic(Duration(milliseconds: 50), (_) {
-      // Calculate the elapsed time
+    _timer = Timer.periodic(const Duration(milliseconds: 50), (_) {
       final elapsedTime = DateTime.now().difference(_startTime);
-      // Update the progress value based on the elapsed time
       setState(() {
         _progressValue = elapsedTime.inMilliseconds / 2000.0;
       });
@@ -71,7 +76,18 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
           _isLongPressed = true;
         });
         _progressValue = 0.0;
-        _showSuccessAlert();
+        setState(() {
+          isLoading = true;
+        });
+        final user =
+            Provider.of<UserProvider>(context, listen: false).userDetails;
+        print(pinController.text);
+        print(user?.mobileNo);
+        // _showSuccessAlert();
+        pinController.clear();
+        setState(() {
+          isLoading = false;
+        });
       }
     });
   }
@@ -118,118 +134,171 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
           centerTitle: true,
         ),
         body: Container(
-        padding: const EdgeInsets.all(26.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Receiver Account:',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            Text(
-              '${widget.accountNo}',
-              style: const TextStyle(fontSize: 14.0),
-            ),
-            const SizedBox(height: 16.0),
-            const Text(
-              'Amount:',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            Text(
-              '${widget.amount}',
-              style: const TextStyle(fontSize: 14.0),
-            ),
-            const SizedBox(height: 16.0),
-            const Text(
-              'Remaining Balance:',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            Text(
-              '${widget.remainingBalance}',
-              style: const TextStyle(fontSize: 14.0),
-            ),
-            const SizedBox(height: 32.0),
-            Pinput(
-              controller: pinController,
-              length: 6,
-              focusNode: focusNode,
-              obscureText: true,
-              obscuringWidget: Icon(
-                Icons.circle,
-                color: Colors.pink.shade300,
-              ),
-              defaultPinTheme: defaultPinTheme,
-              validator: (value) {
-                return value == '000000' ? null : 'Pin is incorrect';
-              },
-              hapticFeedbackType: HapticFeedbackType.lightImpact,
-              onCompleted: (pin) {
-                debugPrint('onCompleted: $pin');
-              },
-              onChanged: (value) {
-                debugPrint('onChanged: $value');
-              },
-              cursor: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 9),
-                    width: 22,
-                    height: 1,
-                    color: focusedBorderColor,
+          padding: const EdgeInsets.all(26.0),
+          child: isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.all(16.0),
+                        margin: const EdgeInsets.only(bottom: 16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Receiver Account:',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                                Text(
+                                  '${widget.accountNo}',
+                                  style: const TextStyle(fontSize: 14.0),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Amount:',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                                Text(
+                                  '${widget.amount}',
+                                  style: const TextStyle(fontSize: 14.0),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Remaining Balance:',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                                Text(
+                                  '${widget.remainingBalance}',
+                                  style: const TextStyle(fontSize: 14.0),
+                                ),
+                                const SizedBox(height: 8.0),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      'Charge:',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${widget.charge}',
+                                      style: const TextStyle(fontSize: 14.0),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 32.0),
+                      Pinput(
+                        controller: pinController,
+                        length: 6,
+                        focusNode: focusNode,
+                        obscureText: true,
+                        obscuringWidget: Icon(
+                          Icons.circle,
+                          color: Colors.pink.shade300,
+                        ),
+                        defaultPinTheme: defaultPinTheme,
+                        hapticFeedbackType: HapticFeedbackType.lightImpact,
+                        // onCompleted: (pin) {
+                        //   debugPrint('onCompleted: $pin');
+                        // },
+                        // onChanged: (value) {
+                        //   debugPrint('onChanged: $value');
+                        // },
+                        cursor: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 9),
+                              width: 22,
+                              height: 1,
+                              color: focusedBorderColor,
+                            ),
+                          ],
+                        ),
+                        focusedPinTheme: defaultPinTheme.copyWith(
+                          decoration: defaultPinTheme.decoration!.copyWith(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: focusedBorderColor),
+                          ),
+                        ),
+                        submittedPinTheme: defaultPinTheme.copyWith(
+                          decoration: defaultPinTheme.decoration!.copyWith(
+                            color: fillColor,
+                            borderRadius: BorderRadius.circular(19),
+                            border: Border.all(color: focusedBorderColor),
+                          ),
+                        ),
+                        errorPinTheme: defaultPinTheme.copyBorderWith(
+                          border: Border.all(color: Colors.redAccent),
+                        ),
+                      ),
+                      const SizedBox(height: 32.0),
+                      LinearProgressIndicator(
+                        value: _progressValue,
+                        valueColor:
+                            const AlwaysStoppedAnimation<Color>(Colors.blue),
+                        backgroundColor: Colors.grey[200],
+                      ),
+                      const SizedBox(height: 32.0),
+                      Center(
+                        child: GestureDetector(
+                          onTapDown: (_) => _startTimer(),
+                          onTapUp: (_) => _stopTimer(),
+                          onTapCancel: () => _stopTimer(),
+                          child: TextButton(
+                            onPressed: () {},
+                            child: const Text('Validate'),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              focusedPinTheme: defaultPinTheme.copyWith(
-                decoration: defaultPinTheme.decoration!.copyWith(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: focusedBorderColor),
                 ),
-              ),
-              submittedPinTheme: defaultPinTheme.copyWith(
-                decoration: defaultPinTheme.decoration!.copyWith(
-                  color: fillColor,
-                  borderRadius: BorderRadius.circular(19),
-                  border: Border.all(color: focusedBorderColor),
-                ),
-              ),
-              errorPinTheme: defaultPinTheme.copyBorderWith(
-                border: Border.all(color: Colors.redAccent),
-              ),
-            ),
-            const SizedBox(height: 32.0),
-            LinearProgressIndicator(
-              value: _progressValue,
-              valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
-              backgroundColor: Colors.grey[200],
-            ),
-            const SizedBox(height: 32.0),
-            Center(
-              child: GestureDetector(
-                onTapDown: (_) => _startTimer(),
-                onTapUp: (_) => _stopTimer(),
-                onTapCancel: () => _stopTimer(),
-                child: TextButton(
-                  onPressed: () {},
-                  child: const Text('Validate'),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+        ));
   }
 }
