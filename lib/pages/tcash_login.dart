@@ -4,6 +4,7 @@ import 'package:rnd_flutter_app/provider/login_provider.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
 import 'package:rnd_flutter_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
+import 'package:rnd_flutter_app/widgets/custom_progress.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -70,7 +71,9 @@ class _LoginPageState extends State<LoginPage> {
       return const HomePage();
     }
     return Scaffold(
-      body: SingleChildScrollView(
+      body: authState.isLoading
+          ? CustomLoadingAnimation()
+          : SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
           child: Form(
@@ -173,9 +176,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.90,
                   child: CustomButton(
-                    content: authState.isLoading
-                        ? const CircularProgressIndicator()
-                        : const Text(
+                          content: const Text(
                             "Login",
                             style: TextStyle(
                               fontSize: 18.0,
