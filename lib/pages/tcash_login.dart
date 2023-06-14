@@ -72,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
     }
     return Scaffold(
       body: authState.isLoading
-          ? CustomLoadingAnimation()
+          ? const CustomLoadingAnimation()
           : SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),

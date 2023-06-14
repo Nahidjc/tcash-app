@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:rnd_flutter_app/api_caller/validate_account.dart';
 import 'package:rnd_flutter_app/pages/components/amount_confirm.dart';
 import 'package:rnd_flutter_app/pages/qr_code_widget.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
+import 'package:rnd_flutter_app/widgets/custom_button.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CashoutPage extends StatefulWidget {
   final String? marchantAccount;
@@ -15,8 +17,8 @@ class CashoutPage extends StatefulWidget {
 class _CashoutPageState extends State<CashoutPage> {
   final TextEditingController _marchantNoController = TextEditingController();
   String accountNumber = '';
-  // String amount = '';
-  // double availableBalance = 500.00;
+  bool isLoading = false;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
@@ -25,15 +27,47 @@ class _CashoutPageState extends State<CashoutPage> {
     }
   }
 
+  validateAgentAccount(String agentAccount) async {
+    setState(() {
+      isLoading = true;
+    });
+    bool isValid = await AccountValidate().validateAgent(agentAccount);
+    setState(() {
+      isLoading = false;
+    });
+
+    if (isValid) {
+      navigateToAmountConfirm(agentAccount);
+    } else {
+      showToastNotValid();
+    }
+  }
+
+  navigateToAmountConfirm(String agentAccount) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AmountConfirm(accountNo: agentAccount),
+        ),
+      );
+    });
+  }
+
+  void showToastNotValid() {
+    Fluttertoast.showToast(
+      msg: 'Agent account not valid',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-  bool isButtonDisabled = _marchantNoController.text.length != 11;
-  bool showError = _marchantNoController.text.isNotEmpty && isButtonDisabled;
-
-  Color borderSideColor = showError
-      ? Colors.red
-      : Color.fromARGB(255, 2, 183, 255);
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink.shade300,
@@ -51,80 +85,78 @@ class _CashoutPageState extends State<CashoutPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(26.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 8),
-           TextField(
-            maxLength: 11,
-            controller: _marchantNoController,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: 'Enter Agent Account Number',
-              border: OutlineInputBorder(),
-              errorText: showError ? 'Account number must be 11 characters' : null,
-              errorBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.red),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              const SizedBox(height: 8),
+              TextFormField(
+                maxLength: 11,
+                controller: _marchantNoController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Enter Agent Account Number',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value?.isEmpty ?? true) {
+                    return 'Please enter an agent account number';
+                  }
+                  if (value?.length != 11) {
+                    return 'Account number must be exactly 11 digits';
+                  }
+
+                  return null;
+                },
+                onChanged: (value) {
+                  setState(() {
+                    accountNumber = value;
+                  });
+                },
               ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: borderSideColor),
+              const SizedBox(height: 16),
+              Column(
+                children: [
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Scan',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  SizedBox(
+                    width: 70,
+                    child: ElevatedButton(
+                      child: const Icon(Icons.qr_code),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const QRViewExample(),
+                        ));
+                      },
+                    ),
+                  ),
+                ],
               ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: borderSideColor),
-              ),
-            ),
-            onChanged: (value) {
-              setState(() {
-                accountNumber = value;
-              });
-            },
-          ),
-            // const SizedBox(height: 16),
-            Column(children: [
-              const Text(
-                'or',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-              const Text(
-                'Scan',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-              Container(
-                width: 70,
-                child: ElevatedButton(
-                  child: const Icon(Icons.qr_code),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.70,
+                child: CustomButton(
+                  content: isLoading
+                      ? const CircularProgressIndicator()
+                      : const Text(
+                          "Next",
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            color: Colors.white,
+                          ),
+                        ),
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const QRViewExample(),
-                    ));
+                    if (_formKey.currentState?.validate() ?? false) {
+                      validateAgentAccount(_marchantNoController.text);
+                    }
                   },
                 ),
-              )
-            ]),
-
-            const SizedBox(height: 16),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.6,
-              child: ElevatedButton(
-                onPressed: isButtonDisabled
-                  ? null // Disable the button if the condition is not met
-                  : () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            AmountConfirm(accountNo: _marchantNoController.text),
-                      ));
-                    },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    side: BorderSide(color: borderSideColor),
-                  ),
-                ),
-                child: const Text('Next'),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

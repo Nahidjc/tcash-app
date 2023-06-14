@@ -40,8 +40,6 @@ class _MyAppBarState extends State<MyAppBar>
       begin: const Offset(-1.0, 0.0),
       end: const Offset(0.0, 0.0),
     ).animate(_animationController);
-
-    // Fetch user details
     fetchUserDetails();
   }
 
@@ -117,7 +115,7 @@ class _MyAppBarState extends State<MyAppBar>
         color: Colors.white,
       ),
       title: _isLoading
-          ? Center(
+          ? const Center(
               child: SizedBox(
                 width: 20,
                 height: 20,
@@ -129,7 +127,7 @@ class _MyAppBarState extends State<MyAppBar>
             ) // Centered loader with white color and smaller size
           : userDetails != null
               ? _buildAppBarContent()
-              : Text(
+              : const Text(
                   'Error fetching user details'), // Show error message if userDetails is null
       actions: <Widget>[
         IconButton(
