@@ -321,7 +321,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: Scrollbar(
                       controller: _scrollController,
-                      child: const TransactionHistory()),
+                      child:  TransactionHistory(accountNumber: authState.userDetails!.mobileNo.toString())),
                 )
               ],
             ),
