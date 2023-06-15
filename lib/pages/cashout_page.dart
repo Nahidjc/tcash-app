@@ -83,7 +83,9 @@ class _CashoutPageState extends State<CashoutPage> {
         ),
         centerTitle: true,
       ),
-      body: Padding(
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
         padding: const EdgeInsets.all(26.0),
         child: Form(
           key: _formKey,
@@ -139,9 +141,7 @@ class _CashoutPageState extends State<CashoutPage> {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.70,
                 child: CustomButton(
-                  content: isLoading
-                      ? const CircularProgressIndicator()
-                      : const Text(
+                        content: const Text(
                           "Next",
                           style: TextStyle(
                             fontSize: 18.0,
