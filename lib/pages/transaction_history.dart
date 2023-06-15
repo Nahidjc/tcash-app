@@ -102,7 +102,6 @@ class _TransactionHistoryState extends State<TransactionHistory> {
         return const AssetImage(
           'assets/icons/transaction.png',
         );
-        ;
     }
   }
 
