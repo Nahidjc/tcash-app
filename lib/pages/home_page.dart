@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rnd_flutter_app/api_caller/payments.dart';
 import 'package:rnd_flutter_app/pages/app_drawer.dart';
 import 'package:rnd_flutter_app/pages/qr_code_widget.dart';
 import 'package:rnd_flutter_app/pages/tcash_login.dart';
 import 'package:rnd_flutter_app/pages/transaction_history.dart';
 import 'package:rnd_flutter_app/pages/user_profile.dart';
 import 'package:rnd_flutter_app/provider/login_provider.dart';
+import 'package:rnd_flutter_app/provider/payment_provider.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
 import 'package:rnd_flutter_app/widgets/coming_soon.dart';
 import 'package:rnd_flutter_app/widgets/home_appbar.dart';
+import 'dart:convert';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -75,9 +78,13 @@ class GridItem extends StatelessWidget {
 
 class _HomePageState extends State<HomePage> {
   late ScrollController _scrollController;
+  bool isLoadingPayment = false;
+  double expenditureAmount = 0;
+  double depositAmount = 0;
   @override
   void initState() {
     super.initState();
+    userExpenditureAndDeposits();
     _scrollController = ScrollController();
   }
 
@@ -85,6 +92,28 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  Future<void> userExpenditureAndDeposits() async {
+    setState(() {
+      isLoadingPayment = true;
+    });
+    try {
+      final authState = Provider.of<AuthProvider>(context, listen: false);
+      final payments = Payments();
+      final response = await payments
+          .userExpenditureAndDeposit(authState.userDetails!.mobileNo!);
+      final data = TransactionResponse.fromJson(json.decode(response.body));
+      setState(() {
+        isLoadingPayment = false;
+        expenditureAmount = data.expenditureAmount;
+        depositAmount = data.depositAmount;
+      });
+    } catch (e) {
+      setState(() {
+        isLoadingPayment = false;
+      });
+    }
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -102,15 +131,15 @@ class _HomePageState extends State<HomePage> {
           width: MediaQuery.of(context).size.width * 0.5,
           child: const AppDrawer(),
         ),
-        appBar: MyAppBar(
-            userId: authState.userId, openAppDrawer: openAppDrawer),
+        appBar:
+            MyAppBar(userId: authState.userId, openAppDrawer: openAppDrawer),
         body: Padding(
           padding: const EdgeInsets.all(10.0),
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
               children: [
-                Container(
+                SizedBox(
                   child: GridView.count(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -213,55 +242,66 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Container(
-                    margin: const EdgeInsets.only(top: 15),
-                    padding: const EdgeInsets.all(20),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
-                          spreadRadius: 1,
-                          blurRadius: 2,
-                          offset: const Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  margin: const EdgeInsets.only(top: 15),
+                  padding: const EdgeInsets.all(20),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 2,
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: isLoadingPayment
+                      ? const Center(child: CircularProgressIndicator())
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              'Financial Management',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Financial Management',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  "Today's Expenditure: $expenditureAmount ৳",
+                                  style: const TextStyle(
+                                    color: Colors.pink,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  "Today's Deposit: $depositAmount ৳",
+                                  style: const TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Your expense today ৳ 24',
-                              style: TextStyle(
-                                color: Colors.pink.shade400,
-                                fontSize: 16,
-                              ),
+                            const Column(
+                              children: [
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.pink,
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                        const Column(
-                          children: [
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.pink,
-                            ),
-                          ],
-                        )
-                      ],
-                    )),
+                ),
                 Container(
                   height: 215,
                   margin: const EdgeInsets.only(top: 10),
@@ -293,19 +333,19 @@ class _HomePageState extends State<HomePage> {
           currentIndex: _currentIndex,
           onTap: (int index) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-            setState(() {
-              _currentIndex = index;
-              if (index == 1) {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const QRViewExample(),
-                ));
-              } else if (index == 2) {
-                Navigator.of(context).push(MaterialPageRoute(
+              setState(() {
+                _currentIndex = index;
+                if (index == 1) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const QRViewExample(),
+                  ));
+                } else if (index == 2) {
+                  Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) =>
                         UserProfilePage(userId: authState.userId),
                   ));
-              }
-            });
+                }
+              });
             });
           },
           items: const <BottomNavigationBarItem>[

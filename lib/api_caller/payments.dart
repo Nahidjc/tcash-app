@@ -19,16 +19,17 @@ class Payments {
         body: json.encode(requestData),
       );
       return response;
-      // final data = json.decode(response.body);
-      // print(data);
-      // // return data;
-      // if (response.statusCode == 200) {
-      //   return true;
-      // } else {
-      //   return data;
-      // }
     } catch (e) {
       return false;
     }
+  }
+
+  Future userExpenditureAndDeposit(String accountNumber) async {
+    final url = Uri.parse('${AppUrl.baseUrl}/today/expense');
+    final response = await http.get(url, headers: {
+      'Content-Type': 'application/json',
+      'accountnumber': accountNumber
+    });
+    return response;
   }
 }
