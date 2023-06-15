@@ -78,9 +78,9 @@ class GridItem extends StatelessWidget {
 
 class _HomePageState extends State<HomePage> {
   late ScrollController _scrollController;
-  bool isLoadingPayment = false;
-  double expenditureAmount = 0;
-  double depositAmount = 0;
+  bool isLoadingPayment = true;
+  double? expenditureAmount;
+  double? depositAmount;
   @override
   void initState() {
     super.initState();
@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  Future<void> userExpenditureAndDeposits() async {
+Future<void> userExpenditureAndDeposits() async {
     setState(() {
       isLoadingPayment = true;
     });
@@ -321,7 +321,9 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: Scrollbar(
                       controller: _scrollController,
-                      child:  TransactionHistory(accountNumber: authState.userDetails!.mobileNo.toString())),
+                      child: TransactionHistory(
+                          accountNumber:
+                              authState.userDetails!.mobileNo.toString())),
                 )
               ],
             ),

@@ -41,9 +41,10 @@ class TransactionResponse {
 
   factory TransactionResponse.fromJson(Map<String, dynamic> json) {
     return TransactionResponse(
-      expenditureAmount: json['expenditureAmount'],
-      depositAmount: json['depositAmount'],
+      expenditureAmount: json['expenditureAmount'].toDouble(),
+      depositAmount: json['depositAmount'].toDouble(),
       message: json['message'],
     );
   }
 }
+
