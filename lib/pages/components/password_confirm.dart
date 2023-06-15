@@ -1,11 +1,13 @@
 import 'dart:async';
+
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
+import 'package:rnd_flutter_app/api_caller/payments.dart';
 import 'package:rnd_flutter_app/pages/home_page.dart';
 import 'package:rnd_flutter_app/provider/user_provider.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
-import 'package:pinput/pinput.dart';
 
 class PasswordConfirm extends StatefulWidget {
   final String? accountNo;
@@ -51,8 +53,7 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
     CoolAlert.show(
       context: context,
       type: CoolAlertType.success,
-      text: "Your transaction was successful!",
-      // closeOnConfirmBtnTap: true,
+      text: "Congratulations! Your transaction was successful.",
       onConfirmBtnTap: () {
         Navigator.push(
           context,
@@ -79,17 +80,30 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
         setState(() {
           isLoading = true;
         });
-        final user =
-            Provider.of<UserProvider>(context, listen: false).userDetails;
-        print(pinController.text);
-        print(user?.mobileNo);
-        // _showSuccessAlert();
+        createPayment();
         pinController.clear();
+      }
+    });
+  }
+
+  Future<void> createPayment() async {
+    final user = Provider.of<UserProvider>(context, listen: false).userDetails;
+    final mobileNo = user?.mobileNo;
+    if (mobileNo != null) {
+      final payments = Payments();
+      bool isPaymentDone = await payments.paymentCashOut(
+        mobileNo,
+        pinController.text,
+        widget.accountNo.toString(),
+        widget.amount,
+      );
+      if (isPaymentDone) {
         setState(() {
           isLoading = false;
         });
+        _showSuccessAlert();
       }
-    });
+    }
   }
 
   void _stopTimer() {
@@ -176,7 +190,7 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 8.0),
+                            const SizedBox(height: 18.0),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -193,7 +207,7 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 8.0),
+                            const SizedBox(height: 18.0),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -208,23 +222,22 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
                                   '${widget.remainingBalance}',
                                   style: const TextStyle(fontSize: 14.0),
                                 ),
-                                const SizedBox(height: 8.0),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      'Charge:',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16.0,
-                                      ),
-                                    ),
-                                    Text(
-                                      '${widget.charge}',
-                                      style: const TextStyle(fontSize: 14.0),
-                                    ),
-                                  ],
+                              ],
+                            ),
+                            const SizedBox(height: 18.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Charge:',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                                Text(
+                                  '${widget.charge}',
+                                  style: const TextStyle(fontSize: 14.0),
                                 ),
                               ],
                             ),

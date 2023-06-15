@@ -131,23 +131,26 @@ class _AmountConfirmState extends State<AmountConfirm> {
       builder: (context) => PasswordConfirm(
           accountNo: data.accountNo,
           amount: data.amount,
-          remainingBalance: data.remainingBalance,
+          remainingBalance:
+              double.parse(data.remainingBalance.toStringAsFixed(2)),
           charge: data.charge),
     ));
   }
 
   double calculateAmountWithPercentage(double amount) {
-    return amount + (0.0099 * amount);
+    double result = amount + (0.0099 * amount);
+    return double.parse(result.toStringAsFixed(2));
   }
 
   double calculateCharge(double amount) {
     double chargePercentage = 0.0099;
     double charge = amount * chargePercentage;
-    return charge;
+    return double.parse(charge.toStringAsFixed(2));
   }
 
   double calculateRemainingBalance(double currentBalance, double amount) {
-    double deductionAmount = amount + (0.099 * amount);
-    return currentBalance - deductionAmount;
+    double deductionAmount = amount + (0.0099 * amount);
+    double roundedDeduction = double.parse(deductionAmount.toStringAsFixed(2));
+    return currentBalance - roundedDeduction;
   }
 }
