@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:convert';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
@@ -8,6 +8,7 @@ import 'package:rnd_flutter_app/api_caller/payments.dart';
 import 'package:rnd_flutter_app/pages/home_page.dart';
 import 'package:rnd_flutter_app/provider/user_provider.dart';
 import 'package:rnd_flutter_app/routes/app_routes.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class PasswordConfirm extends StatefulWidget {
   final String? accountNo;
@@ -37,7 +38,7 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
   late DateTime _startTime;
   double _progressValue = 0.0;
   bool isLoading = false;
-
+  final sign = '৳';
   @override
   void initState() {
     super.initState();
@@ -46,14 +47,15 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
   @override
   void dispose() {
     _timer.cancel();
+    pinController.dispose();
     super.dispose();
   }
 
-  _showSuccessAlert() {
+  _showSuccessAlert(String message) {
     CoolAlert.show(
       context: context,
       type: CoolAlertType.success,
-      text: "Congratulations! Your transaction was successful.",
+      text: message,
       onConfirmBtnTap: () {
         Navigator.push(
           context,
@@ -91,17 +93,27 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
     final mobileNo = user?.mobileNo;
     if (mobileNo != null) {
       final payments = Payments();
-      bool isPaymentDone = await payments.paymentCashOut(
+      final response = await payments.paymentCashOut(
         mobileNo,
         pinController.text,
         widget.accountNo.toString(),
         widget.amount,
       );
-      if (isPaymentDone) {
-        setState(() {
-          isLoading = false;
-        });
-        _showSuccessAlert();
+      final data = json.decode(response.body);
+      setState(() {
+        isLoading = false;
+      });
+      if (response.statusCode == 200) {
+        _showSuccessAlert(data["message"]);
+      } else {
+        Fluttertoast.showToast(
+            msg: data["message"],
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
       }
     }
   }
@@ -112,6 +124,19 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
     setState(() {
       _isLongPressed = false;
     });
+  }
+
+  bool isButtonEnabled = false;
+  void _validatePin() {
+    if (pinController.text.length == 6) {
+      setState(() {
+        isButtonEnabled = true;
+      });
+    } else {
+      setState(() {
+        isButtonEnabled = false;
+      });
+    }
   }
 
   @override
@@ -202,7 +227,7 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
                                   ),
                                 ),
                                 Text(
-                                  '${widget.amount}',
+                                  '$sign ${widget.amount}',
                                   style: const TextStyle(fontSize: 14.0),
                                 ),
                               ],
@@ -219,7 +244,7 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
                                   ),
                                 ),
                                 Text(
-                                  '${widget.remainingBalance}',
+                                  '$sign ${widget.remainingBalance}',
                                   style: const TextStyle(fontSize: 14.0),
                                 ),
                               ],
@@ -236,7 +261,7 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
                                   ),
                                 ),
                                 Text(
-                                  '${widget.charge}',
+                                  '$sign ${widget.charge}',
                                   style: const TextStyle(fontSize: 14.0),
                                 ),
                               ],
@@ -245,50 +270,46 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
                         ),
                       ),
                       const SizedBox(height: 32.0),
-                      Pinput(
-                        controller: pinController,
-                        length: 6,
-                        focusNode: focusNode,
-                        obscureText: true,
-                        obscuringWidget: Icon(
-                          Icons.circle,
-                          color: Colors.pink.shade300,
-                        ),
-                        defaultPinTheme: defaultPinTheme,
-                        hapticFeedbackType: HapticFeedbackType.lightImpact,
-                        // onCompleted: (pin) {
-                        //   debugPrint('onCompleted: $pin');
-                        // },
-                        // onChanged: (value) {
-                        //   debugPrint('onChanged: $value');
-                        // },
-                        cursor: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(bottom: 9),
-                              width: 22,
-                              height: 1,
-                              color: focusedBorderColor,
+                      Center(
+                        child: Pinput(
+                            controller: pinController,
+                            length: 6,
+                            focusNode: focusNode,
+                            onChanged: (_) => _validatePin(),
+                            obscureText: true,
+                            obscuringWidget: Icon(
+                              Icons.circle,
+                              color: Colors.pink.shade300,
                             ),
-                          ],
-                        ),
-                        focusedPinTheme: defaultPinTheme.copyWith(
-                          decoration: defaultPinTheme.decoration!.copyWith(
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: focusedBorderColor),
-                          ),
-                        ),
-                        submittedPinTheme: defaultPinTheme.copyWith(
-                          decoration: defaultPinTheme.decoration!.copyWith(
-                            color: fillColor,
-                            borderRadius: BorderRadius.circular(19),
-                            border: Border.all(color: focusedBorderColor),
-                          ),
-                        ),
-                        errorPinTheme: defaultPinTheme.copyBorderWith(
-                          border: Border.all(color: Colors.redAccent),
-                        ),
+                            defaultPinTheme: defaultPinTheme,
+                            hapticFeedbackType: HapticFeedbackType.lightImpact,
+                            cursor: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(bottom: 9),
+                                  width: 22,
+                                  height: 1,
+                                  color: focusedBorderColor,
+                                ),
+                              ],
+                            ),
+                            focusedPinTheme: defaultPinTheme.copyWith(
+                              decoration: defaultPinTheme.decoration!.copyWith(
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: focusedBorderColor),
+                              ),
+                            ),
+                            submittedPinTheme: defaultPinTheme.copyWith(
+                              decoration: defaultPinTheme.decoration!.copyWith(
+                                color: fillColor,
+                                borderRadius: BorderRadius.circular(19),
+                                border: Border.all(color: focusedBorderColor),
+                              ),
+                            ),
+                            errorPinTheme: defaultPinTheme.copyBorderWith(
+                              border: Border.all(color: Colors.redAccent),
+                            )),
                       ),
                       const SizedBox(height: 32.0),
                       LinearProgressIndicator(
@@ -300,9 +321,11 @@ class _PasswordConfirmState extends State<PasswordConfirm> {
                       const SizedBox(height: 32.0),
                       Center(
                         child: GestureDetector(
-                          onTapDown: (_) => _startTimer(),
-                          onTapUp: (_) => _stopTimer(),
-                          onTapCancel: () => _stopTimer(),
+                          onTapDown: (_) =>
+                              isButtonEnabled ? _startTimer() : null,
+                          onTapUp: (_) => isButtonEnabled ? _stopTimer() : null,
+                          onTapCancel: () =>
+                              isButtonEnabled ? _stopTimer() : null,
                           child: TextButton(
                             onPressed: () {},
                             child: const Text('Validate'),
