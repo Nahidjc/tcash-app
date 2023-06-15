@@ -245,6 +245,7 @@ Future<void> userExpenditureAndDeposits() async {
                   margin: const EdgeInsets.only(top: 15),
                   padding: const EdgeInsets.all(20),
                   width: double.infinity,
+                  height: MediaQuery.of(context).size.height * 0.15,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
