@@ -158,6 +158,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
               : senderTransactionType;
           final sign = userAccountNumber == receiverAccount ? '+ ৳' : '- ৳';
           final accountText = displayName ?? displayAccountNumber;
+          bool isDebited = userAccountNumber == receiverAccount ? true : false;
 
           return ListTile(
             leading: CircleAvatar(
@@ -178,8 +179,9 @@ class _TransactionHistoryState extends State<TransactionHistory> {
             ),
             trailing: Text(
               '$sign${transaction['amount']}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
+                color: isDebited ? Colors.green : Colors.pink,
               ),
             ),
           );
