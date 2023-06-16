@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rnd_flutter_app/api_caller/transactions.dart';
-
+import 'package:rnd_flutter_app/provider/login_provider.dart';
 
 class TransactionHistory extends StatefulWidget {
   final String accountNumber;
@@ -67,7 +68,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     final list =
         await Transaction().fetchTransactionsByAccount(widget.accountNumber);
     transactionList = list;
-         setState(() {
+    setState(() {
       isLoading = false;
     });
   }
@@ -102,45 +103,88 @@ class _TransactionHistoryState extends State<TransactionHistory> {
         return const AssetImage(
           'assets/icons/transaction.png',
         );
-        ;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-      itemCount: transactionList.length,
-      itemBuilder: (BuildContext context, int index) {
-        final transaction = transactionList[index];
-        final sign = transaction['debited'] == true ? '+ ৳' : '- ৳';
-        return ListTile(
-          leading: CircleAvatar(
-              backgroundColor: Colors.transparent,
-              backgroundImage:
-                  iconPicker(transactionList[index]['transactionType'])),
-          title: Text(
-            transactionList[index]['receiverAccount'],
-            style: const TextStyle(
-              color: Colors.blue,
+    final authState = Provider.of<AuthProvider>(context);
+    final userAccountNumber = authState.userDetails?.mobileNo;
+    if (isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } else if (transactionList.isEmpty) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.history,
+              size: 64,
+              color: Colors.pink,
             ),
-          ),
-          subtitle: Text(
-            transactionList[index]['transactionType'],
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 34, 17, 17),
+            SizedBox(height: 16),
+            Text(
+              'No transactions found',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.pink),
             ),
-          ),
-          trailing: Text(
-            '$sign${transaction['amount']}',
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
+          ],
+        ),
+      );
+    } else {
+      return ListView.builder(
+        itemCount: transactionList.length,
+        itemBuilder: (BuildContext context, int index) {
+          final transaction = transactionList[index];
+          final receiverAccount = transaction['receiverAccount'];
+          final senderAccount = transaction['senderAccount'];
+          final receiverName = transaction['receiverName'];
+          final senderName = transaction['senderName'];
+          final receiverTransactionType =
+              transaction['receiverTransactionType'];
+          final senderTransactionType = transaction['senderTransactionType'];
+
+          final displayAccountNumber = userAccountNumber == receiverAccount
+              ? senderAccount
+              : receiverAccount;
+          final displayName =
+              userAccountNumber == receiverAccount ? senderName : receiverName;
+          final displayTransactionType = userAccountNumber == receiverAccount
+              ? receiverTransactionType
+              : senderTransactionType;
+          final sign = userAccountNumber == receiverAccount ? '+ ৳' : '- ৳';
+          final accountText = displayName ?? displayAccountNumber;
+
+          return ListTile(
+            leading: CircleAvatar(
+                backgroundColor: Colors.transparent,
+                backgroundImage: iconPicker(displayTransactionType)),
+            title: Text(
+              accountText,
+              style: const TextStyle(
+                color: Colors.blue,
+              ),
             ),
-          ),
-        );
-      },
-    );
+            subtitle: Text(
+              displayTransactionType,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 34, 17, 17),
+              ),
+            ),
+            trailing: Text(
+              '$sign${transaction['amount']}',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          );
+        },
+      );
+    }
   }
 }
